@@ -1,0 +1,21 @@
+{
+  "conjecture_id": 6011,
+  "description": "If G is a connected graph, claw_free, x = radius and y = remoteness, then y(G) >= 239/345 - 26/345 * x(G)",
+  "subgroups": [
+    "claw_free",
+    "connected"
+  ],
+  "x_name": "radius",
+  "y_name": "remoteness",
+  "sign": ">=",
+  "found": false,
+  "time_s": 0.34,
+  "best_violation": -0.207971,
+  "best_graph6": ">>graph6<<Ib|vMMxiw",
+  "invariants": {
+    "remoteness": 0.75,
+    "radius": 2.0
+  },
+  "proof": "Pas de contre-exemple trouvé. Meilleure violation: -0.2080",
+  "cost": 120.0
+}

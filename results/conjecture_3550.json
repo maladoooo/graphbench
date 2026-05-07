@@ -1,0 +1,20 @@
+{
+  "conjecture_id": 3550,
+  "description": "If G is a connected graph, x = largest_eigenvalue and y = triangle_number, then y(G) <= 5306234/359925 + 3381239/769239 * x(G) - 156301/129798 * x(G)² + 193839/770395 * x(G)³",
+  "subgroups": [
+    "connected"
+  ],
+  "x_name": "largest_eigenvalue",
+  "y_name": "triangle_number",
+  "sign": "<=",
+  "found": true,
+  "time_s": 0.165,
+  "best_violation": 0.167246,
+  "best_graph6": ">>graph6<<_}?G??KBI_?O?pO??Of?A?O?@??C@?W??@ACg???B_O?OC?CAO??OAAO??c???H??@G??G?@?G??ACG???CC",
+  "invariants": {
+    "triangle_number": 31.0,
+    "largest_eigenvalue": 4.229962
+  },
+  "proof": "Conjecture #3550: If G is a connected graph, x = largest_eigenvalue and y = triangle_number, then y(G) <= 5306234/359925 + 3381239/769239 * x(G) - 156301/129798 * x(G)² + 193839/770395 * x(G)³\n  X = largest_eigenvalue(G) = 4.229962188673552\n  Y = triangle_number(G) = 31.0\n  f(X) = 30.832754\n  Violation = 0.167246 > 0  ✓ (contre-exemple valide)",
+  "cost": 0.165
+}

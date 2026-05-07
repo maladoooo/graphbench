@@ -1,0 +1,21 @@
+{
+  "conjecture_id": 6179,
+  "description": "If G is a connected graph, claw_free, x = maximum_degree and y = average_degree, then y(G) >= - 1/4 + 7/12 * x(G)",
+  "subgroups": [
+    "claw_free",
+    "connected"
+  ],
+  "x_name": "maximum_degree",
+  "y_name": "average_degree",
+  "sign": ">=",
+  "found": true,
+  "time_s": 0.025,
+  "best_violation": 0.05,
+  "best_graph6": ">>graph6<<IwFww`A_?",
+  "invariants": {
+    "maximum_degree": 6.0,
+    "average_degree": 3.2
+  },
+  "proof": "Conjecture #6179: If G is a connected graph, claw_free, x = maximum_degree and y = average_degree, then y(G) >= - 1/4 + 7/12 * x(G)\n  X = maximum_degree(G) = 6.0\n  Y = average_degree(G) = 3.2\n  f(X) = 3.250000\n  Violation = 0.050000 > 0  ✓ (contre-exemple valide)",
+  "cost": 0.025
+}

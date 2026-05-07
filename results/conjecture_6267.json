@@ -1,0 +1,21 @@
+{
+  "conjecture_id": 6267,
+  "description": "If G is a connected graph, claw_free, x = average_degree and y = maximum_degree, then y(G) <= 3/7 + 12/7 * x(G)",
+  "subgroups": [
+    "claw_free",
+    "connected"
+  ],
+  "x_name": "average_degree",
+  "y_name": "maximum_degree",
+  "sign": "<=",
+  "found": true,
+  "time_s": 0.022,
+  "best_violation": 0.085714,
+  "best_graph6": ">>graph6<<IwFww`A_?",
+  "invariants": {
+    "maximum_degree": 6.0,
+    "average_degree": 3.2
+  },
+  "proof": "Conjecture #6267: If G is a connected graph, claw_free, x = average_degree and y = maximum_degree, then y(G) <= 3/7 + 12/7 * x(G)\n  X = average_degree(G) = 3.2\n  Y = maximum_degree(G) = 6.0\n  f(X) = 5.914286\n  Violation = 0.085714 > 0  ✓ (contre-exemple valide)",
+  "cost": 0.022
+}

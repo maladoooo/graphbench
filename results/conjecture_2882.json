@@ -1,0 +1,20 @@
+{
+  "conjecture_id": 2882,
+  "description": "If G is a connected graph, x = second_zagreb_index and y = independent_domination_number, then y(G) <= 17/12 + 1/12 * x(G)",
+  "subgroups": [
+    "connected"
+  ],
+  "x_name": "second_zagreb_index",
+  "y_name": "independent_domination_number",
+  "sign": "<=",
+  "found": true,
+  "time_s": 0.002,
+  "best_violation": 0.416667,
+  "best_graph6": ">>graph6<<DHg",
+  "invariants": {
+    "second_zagreb_index": 14.0,
+    "independent_domination_number": 3.0
+  },
+  "proof": "Conjecture #2882: If G is a connected graph, x = second_zagreb_index and y = independent_domination_number, then y(G) <= 17/12 + 1/12 * x(G)\n  X = second_zagreb_index(G) = 14.0\n  Y = independent_domination_number(G) = 3.0\n  f(X) = 2.583333\n  Violation = 0.416667 > 0  ✓ (contre-exemple valide)",
+  "cost": 0.002
+}

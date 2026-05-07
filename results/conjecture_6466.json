@@ -1,0 +1,21 @@
+{
+  "conjecture_id": 6466,
+  "description": "If G is a connected graph, claw_free, x = triangle_number and y = largest_eigenvalue, then y(G) <= 2060411/341361 + 16152/649175 * x(G)",
+  "subgroups": [
+    "claw_free",
+    "connected"
+  ],
+  "x_name": "triangle_number",
+  "y_name": "largest_eigenvalue",
+  "sign": "<=",
+  "found": true,
+  "time_s": 0.011,
+  "best_violation": 0.00099,
+  "best_graph6": ">>graph6<<Kz~~zjhx{Bvp",
+  "invariants": {
+    "triangle_number": 81.0,
+    "largest_eigenvalue": 8.052207
+  },
+  "proof": "Conjecture #6466: If G is a connected graph, claw_free, x = triangle_number and y = largest_eigenvalue, then y(G) <= 2060411/341361 + 16152/649175 * x(G)\n  X = triangle_number(G) = 81.0\n  Y = largest_eigenvalue(G) = 8.05220720106022\n  f(X) = 8.051217\n  Violation = 0.000990 > 0  ✓ (contre-exemple valide)",
+  "cost": 0.011
+}

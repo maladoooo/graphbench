@@ -1,0 +1,21 @@
+{
+  "conjecture_id": 4247,
+  "description": "If G is a connected graph, tree, x = diameter and y = independent_domination_number, then y(G) <= - 7 + 4 * x(G)",
+  "subgroups": [
+    "connected",
+    "tree"
+  ],
+  "x_name": "diameter",
+  "y_name": "independent_domination_number",
+  "sign": "<=",
+  "found": true,
+  "time_s": 0.012,
+  "best_violation": 1.0,
+  "best_graph6": ">>graph6<<KoCGSOGA?OO?",
+  "invariants": {
+    "diameter": 4.0,
+    "independent_domination_number": 10.0
+  },
+  "proof": "Conjecture #4247: If G is a connected graph, tree, x = diameter and y = independent_domination_number, then y(G) <= - 7 + 4 * x(G)\n  X = diameter(G) = 4.0\n  Y = independent_domination_number(G) = 10.0\n  f(X) = 9.000000\n  Violation = 1.000000 > 0  ✓ (contre-exemple valide)",
+  "cost": 0.012
+}

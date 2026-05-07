@@ -1,0 +1,20 @@
+{
+  "conjecture_id": 981,
+  "description": "If G is a connected graph, x = average_degree and y = clique_number, then y(G) <= 5/3 * x(G)",
+  "subgroups": [
+    "connected"
+  ],
+  "x_name": "average_degree",
+  "y_name": "clique_number",
+  "sign": "<=",
+  "found": true,
+  "time_s": 0.001,
+  "best_violation": 0.060606,
+  "best_graph6": ">>graph6<<J~aCCA?_C??",
+  "invariants": {
+    "clique_number": 4.0,
+    "average_degree": 2.363636
+  },
+  "proof": "Conjecture #981: If G is a connected graph, x = average_degree and y = clique_number, then y(G) <= 5/3 * x(G)\n  X = average_degree(G) = 2.3636363636363638\n  Y = clique_number(G) = 4.0\n  f(X) = 3.939394\n  Violation = 0.060606 > 0  ✓ (contre-exemple valide)",
+  "cost": 0.001
+}

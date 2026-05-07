@@ -1,0 +1,20 @@
+{
+  "conjecture_id": 3191,
+  "description": "If G is a connected graph, x = proximity and y = vertex_cover_number, then y(G) >= 19/3 - 130/9 * x(G)",
+  "subgroups": [
+    "connected"
+  ],
+  "x_name": "proximity",
+  "y_name": "vertex_cover_number",
+  "sign": ">=",
+  "found": true,
+  "time_s": 0.088,
+  "best_violation": 0.090703,
+  "best_graph6": ">>graph6<<KU?ICA?PC?O?",
+  "invariants": {
+    "proximity": 0.22449,
+    "vertex_cover_number": 3.0
+  },
+  "proof": "Conjecture #3191: If G is a connected graph, x = proximity and y = vertex_cover_number, then y(G) >= 19/3 - 130/9 * x(G)\n  X = proximity(G) = 0.22448979591836735\n  Y = vertex_cover_number(G) = 3.0\n  f(X) = 3.090703\n  Violation = 0.090703 > 0  ✓ (contre-exemple valide)",
+  "cost": 0.088
+}

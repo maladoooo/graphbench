@@ -1,0 +1,21 @@
+{
+  "conjecture_id": 5952,
+  "description": "If G is a connected graph, claw_free, x = diameter and y = independence_number, then y(G) <= 2 + x(G)",
+  "subgroups": [
+    "claw_free",
+    "connected"
+  ],
+  "x_name": "diameter",
+  "y_name": "independence_number",
+  "sign": "<=",
+  "found": false,
+  "time_s": 0.363,
+  "best_violation": -1.0,
+  "best_graph6": ">>graph6<<Jz~~zjhxwB_",
+  "invariants": {
+    "diameter": 2.0,
+    "independence_number": 3.0
+  },
+  "proof": "Pas de contre-exemple trouvé. Meilleure violation: -1.0000",
+  "cost": 120.0
+}

@@ -1,0 +1,20 @@
+{
+  "conjecture_id": 1891,
+  "description": "If G is a connected graph, x = vertex_cover_number and y = total_domination_number, then y(G) <= 1/2 + 3/2 * x(G)",
+  "subgroups": [
+    "connected"
+  ],
+  "x_name": "vertex_cover_number",
+  "y_name": "total_domination_number",
+  "sign": "<=",
+  "found": false,
+  "time_s": 0.122,
+  "best_violation": 0.0,
+  "best_graph6": ">>graph6<<F@`aO",
+  "invariants": {
+    "vertex_cover_number": 3.0,
+    "total_domination_number": 5.0
+  },
+  "proof": "Pas de contre-exemple trouvé. Meilleure violation: 0.0000",
+  "cost": 120.0
+}

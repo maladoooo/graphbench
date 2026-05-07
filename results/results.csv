@@ -1,0 +1,5 @@
+conjecture_id,subgroup,x_name,y_name,sign,found,time_s,best_violation,best_graph6,x_value,y_value,fx_value,cost
+7205,"['claw_free', 'connected']",first_zagreb_index,second_zagreb_index,>=,1,0.008,38.846154,>>graph6<<JfrzVmnu`V_,502.0,1702.0,1740.8461538461543,0.008
+7565,"['claw_free', 'connected']",largest_eigenvalue,triangle_number,>=,1,0.007,0.645018,>>graph6<<Kz~~zjhx{Bvp,8.05220720106022,81.0,81.64501782868757,0.007
+7694,"['claw_free', 'connected']",largest_distance_eigenvalue,proximity,>=,1,0.057,0.001486,>>graph6<<HyCD?GH,24.647024072045753,0.23529411764705882,0.23678016331843793,0.057
+7711,"['claw_free', 'connected']",second_smallest_laplace_eigenvalue,diameter,>=,1,0.454,0.062879,>>graph6<<IGCdIaC`g,0.15957516116978945,6.0,6.062878691303147,0.454

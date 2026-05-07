@@ -1,0 +1,21 @@
+{
+  "conjecture_id": 6013,
+  "description": "If G is a connected graph, claw_free, x = radius and y = remoteness, then y(G) >= 279709/161000 - 57877/57960 * x(G) + 12073/48300 * x(G)² - 883/41400 * x(G)³",
+  "subgroups": [
+    "claw_free",
+    "connected"
+  ],
+  "x_name": "radius",
+  "y_name": "remoteness",
+  "sign": ">=",
+  "found": false,
+  "time_s": 0.409,
+  "best_violation": -0.032615,
+  "best_graph6": ">>graph6<<HNZK^~V",
+  "invariants": {
+    "remoteness": 1.0,
+    "radius": 1.0
+  },
+  "proof": "Pas de contre-exemple trouvé. Meilleure violation: -0.0326",
+  "cost": 120.0
+}

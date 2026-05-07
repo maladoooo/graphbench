@@ -1,0 +1,21 @@
+{
+  "conjecture_id": 6124,
+  "description": "If G is a connected graph, claw_free, x = density and y = remoteness, then y(G) <= 17/59 + 378/295 * x(G)",
+  "subgroups": [
+    "claw_free",
+    "connected"
+  ],
+  "x_name": "density",
+  "y_name": "remoteness",
+  "sign": "<=",
+  "found": true,
+  "time_s": 0.102,
+  "best_violation": 0.018079,
+  "best_graph6": ">>graph6<<Kj^EMK@B@?OO",
+  "invariants": {
+    "remoteness": 0.733333,
+    "density": 0.333333
+  },
+  "proof": "Conjecture #6124: If G is a connected graph, claw_free, x = density and y = remoteness, then y(G) <= 17/59 + 378/295 * x(G)\n  X = density(G) = 0.3333333333333333\n  Y = remoteness(G) = 0.7333333333333333\n  f(X) = 0.715254\n  Violation = 0.018079 > 0  ✓ (contre-exemple valide)",
+  "cost": 0.102
+}

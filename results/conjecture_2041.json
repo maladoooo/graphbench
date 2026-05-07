@@ -1,0 +1,20 @@
+{
+  "conjecture_id": 2041,
+  "description": "If G is a connected graph, x = independent_domination_number and y = matching_number, then y(G) >= 3/4 + 1/4 * x(G)",
+  "subgroups": [
+    "connected"
+  ],
+  "x_name": "independent_domination_number",
+  "y_name": "matching_number",
+  "sign": ">=",
+  "found": true,
+  "time_s": 0.094,
+  "best_violation": 0.25,
+  "best_graph6": ">>graph6<<Qq?G_JA@C??_?GC?Q??H?C?AC_?",
+  "invariants": {
+    "matching_number": 4.0,
+    "independent_domination_number": 14.0
+  },
+  "proof": "Conjecture #2041: If G is a connected graph, x = independent_domination_number and y = matching_number, then y(G) >= 3/4 + 1/4 * x(G)\n  X = independent_domination_number(G) = 14.0\n  Y = matching_number(G) = 4.0\n  f(X) = 4.250000\n  Violation = 0.250000 > 0  ✓ (contre-exemple valide)",
+  "cost": 0.094
+}

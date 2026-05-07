@@ -1,0 +1,20 @@
+{
+  "conjecture_id": 1337,
+  "description": "If G is a connected graph, x = triangle_number and y = average_degree, then y(G) <= 5 + 2/45 * x(G)",
+  "subgroups": [
+    "connected"
+  ],
+  "x_name": "triangle_number",
+  "y_name": "average_degree",
+  "sign": "<=",
+  "found": true,
+  "time_s": 0.076,
+  "best_violation": 0.038384,
+  "best_graph6": ">>graph6<<JfT\\|i{y~V?",
+  "invariants": {
+    "triangle_number": 38.0,
+    "average_degree": 6.727273
+  },
+  "proof": "Conjecture #1337: If G is a connected graph, x = triangle_number and y = average_degree, then y(G) <= 5 + 2/45 * x(G)\n  X = triangle_number(G) = 38.0\n  Y = average_degree(G) = 6.7272727272727275\n  f(X) = 6.688889\n  Violation = 0.038384 > 0  ✓ (contre-exemple valide)",
+  "cost": 0.076
+}

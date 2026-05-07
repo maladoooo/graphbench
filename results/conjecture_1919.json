@@ -1,0 +1,20 @@
+{
+  "conjecture_id": 1919,
+  "description": "If G is a connected graph, x = vertex_cover_number and y = proximity, then y(G) >= 177/572 - 15/572 * x(G)",
+  "subgroups": [
+    "connected"
+  ],
+  "x_name": "vertex_cover_number",
+  "y_name": "proximity",
+  "sign": ">=",
+  "found": true,
+  "time_s": 0.013,
+  "best_violation": 0.004409,
+  "best_graph6": ">>graph6<<LU?GAGAAaG?Co?",
+  "invariants": {
+    "proximity": 0.173913,
+    "vertex_cover_number": 5.0
+  },
+  "proof": "Conjecture #1919: If G is a connected graph, x = vertex_cover_number and y = proximity, then y(G) >= 177/572 - 15/572 * x(G)\n  X = vertex_cover_number(G) = 5.0\n  Y = proximity(G) = 0.17391304347826086\n  f(X) = 0.178322\n  Violation = 0.004409 > 0  ✓ (contre-exemple valide)",
+  "cost": 0.013
+}

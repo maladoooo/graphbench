@@ -1,0 +1,21 @@
+{
+  "conjecture_id": 6180,
+  "description": "If G is a connected graph, claw_free, x = maximum_degree and y = average_degree, then y(G) >= 4/9 + 4/9 * x(G)",
+  "subgroups": [
+    "claw_free",
+    "connected"
+  ],
+  "x_name": "maximum_degree",
+  "y_name": "average_degree",
+  "sign": ">=",
+  "found": false,
+  "time_s": 1.231,
+  "best_violation": -0.166667,
+  "best_graph6": ">>graph6<<Cd",
+  "invariants": {
+    "maximum_degree": 2.0,
+    "average_degree": 1.5
+  },
+  "proof": "Pas de contre-exemple trouvé. Meilleure violation: -0.1667",
+  "cost": 120.0
+}

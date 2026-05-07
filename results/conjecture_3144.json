@@ -1,0 +1,20 @@
+{
+  "conjecture_id": 3144,
+  "description": "If G is a connected graph, x = proximity and y = total_domination_number, then y(G) >= 20/3 - 112/9 * x(G)",
+  "subgroups": [
+    "connected"
+  ],
+  "x_name": "proximity",
+  "y_name": "total_domination_number",
+  "sign": ">=",
+  "found": true,
+  "time_s": 0.058,
+  "best_violation": 0.02439,
+  "best_graph6": ">>graph6<<LUBKD?G_C?O?_O",
+  "invariants": {
+    "proximity": 0.292683,
+    "total_domination_number": 3.0
+  },
+  "proof": "Conjecture #3144: If G is a connected graph, x = proximity and y = total_domination_number, then y(G) >= 20/3 - 112/9 * x(G)\n  X = proximity(G) = 0.2926829268292683\n  Y = total_domination_number(G) = 3.0\n  f(X) = 3.024390\n  Violation = 0.024390 > 0  ✓ (contre-exemple valide)",
+  "cost": 0.058
+}

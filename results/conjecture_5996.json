@@ -1,0 +1,21 @@
+{
+  "conjecture_id": 5996,
+  "description": "If G is a connected graph, claw_free, x = radius and y = total_domination_number, then y(G) <= - 36207/7000 + 218/21 * x(G) - 23/7 * x(G)² + 1/3 * x(G)³",
+  "subgroups": [
+    "claw_free",
+    "connected"
+  ],
+  "x_name": "radius",
+  "y_name": "total_domination_number",
+  "sign": "<=",
+  "found": false,
+  "time_s": 0.342,
+  "best_violation": -0.256143,
+  "best_graph6": ">>graph6<<Ij~~zjhxw",
+  "invariants": {
+    "radius": 1.0,
+    "total_domination_number": 2.0
+  },
+  "proof": "Pas de contre-exemple trouvé. Meilleure violation: -0.2561",
+  "cost": 120.0
+}

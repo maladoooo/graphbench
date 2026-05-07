@@ -1,0 +1,21 @@
+{
+  "conjecture_id": 6270,
+  "description": "If G is a connected graph, claw_free, x = average_degree and y = maximum_degree, then y(G) <= 1454650/972317 + 2977288/942595 * x(G) - 282400/897043 * x(G)² + 202/17651 * x(G)³",
+  "subgroups": [
+    "claw_free",
+    "connected"
+  ],
+  "x_name": "average_degree",
+  "y_name": "maximum_degree",
+  "sign": "<=",
+  "found": true,
+  "time_s": 0.023,
+  "best_violation": 0.518557,
+  "best_graph6": ">>graph6<<O~~~z|~~~|~mznoB}@wBN",
+  "invariants": {
+    "maximum_degree": 14.0,
+    "average_degree": 11.25
+  },
+  "proof": "Conjecture #6270: If G is a connected graph, claw_free, x = average_degree and y = maximum_degree, then y(G) <= 1454650/972317 + 2977288/942595 * x(G) - 282400/897043 * x(G)² + 202/17651 * x(G)³\n  X = average_degree(G) = 11.25\n  Y = maximum_degree(G) = 14.0\n  f(X) = 13.481443\n  Violation = 0.518557 > 0  ✓ (contre-exemple valide)",
+  "cost": 0.023
+}

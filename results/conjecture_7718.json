@@ -1,0 +1,21 @@
+{
+  "conjecture_id": 7718,
+  "description": "If G is a connected graph, claw_free, x = second_smallest_laplace_eigenvalue and y = radius, then y(G) >= 4384876/823549 - 6532753/468567 * x(G)",
+  "subgroups": [
+    "claw_free",
+    "connected"
+  ],
+  "x_name": "second_smallest_laplace_eigenvalue",
+  "y_name": "radius",
+  "sign": ">=",
+  "found": true,
+  "time_s": 0.119,
+  "best_violation": 0.023619,
+  "best_graph6": ">>graph6<<J~~X?C??[W?",
+  "invariants": {
+    "second_smallest_laplace_eigenvalue": 0.165023,
+    "radius": 3.0
+  },
+  "proof": "Conjecture #7718: If G is a connected graph, claw_free, x = second_smallest_laplace_eigenvalue and y = radius, then y(G) >= 4384876/823549 - 6532753/468567 * x(G)\n  X = second_smallest_laplace_eigenvalue(G) = 0.16502291832153695\n  Y = radius(G) = 3.0\n  f(X) = 3.023619\n  Violation = 0.023619 > 0  ✓ (contre-exemple valide)",
+  "cost": 0.119
+}

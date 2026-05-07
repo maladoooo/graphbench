@@ -1,0 +1,20 @@
+{
+  "conjecture_id": 1191,
+  "description": "If G is a connected graph, x = clique_number and y = minimum_degree, then y(G) <= 106807/693000 + 29551/8316 * x(G) - 39/77 * x(G)² + 29/1188 * x(G)³",
+  "subgroups": [
+    "connected"
+  ],
+  "x_name": "clique_number",
+  "y_name": "minimum_degree",
+  "sign": "<=",
+  "found": true,
+  "time_s": 0.002,
+  "best_violation": 0.485848,
+  "best_graph6": ">>graph6<<J^v~v~}~~~?",
+  "invariants": {
+    "minimum_degree": 9.0,
+    "clique_number": 6.0
+  },
+  "proof": "Conjecture #1191: If G is a connected graph, x = clique_number and y = minimum_degree, then y(G) <= 106807/693000 + 29551/8316 * x(G) - 39/77 * x(G)² + 29/1188 * x(G)³\n  X = clique_number(G) = 6.0\n  Y = minimum_degree(G) = 9.0\n  f(X) = 8.514152\n  Violation = 0.485848 > 0  ✓ (contre-exemple valide)",
+  "cost": 0.002
+}
