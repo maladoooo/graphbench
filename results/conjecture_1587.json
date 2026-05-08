@@ -7,14 +7,14 @@
   "x_name": "total_domination_number",
   "y_name": "matching_number",
   "sign": ">=",
-  "found": false,
-  "time_s": 0.156,
-  "best_violation": 0.0,
-  "best_graph6": ">>graph6<<CX",
+  "found": true,
+  "time_s": 0.494,
+  "best_violation": 0.333333,
+  "best_graph6": ">>graph6<<NW_??c?A?GSO?AGA?E?",
   "invariants": {
-    "matching_number": 1.0,
-    "total_domination_number": 2.0
+    "matching_number": 6.0,
+    "total_domination_number": 10.0
   },
-  "proof": "Pas de contre-exemple trouvé. Meilleure violation: 0.0000",
-  "cost": 120.0
+  "proof": "Conjecture #1587: If G is a connected graph, x = total_domination_number and y = matching_number, then y(G) >= - 1/3 + 2/3 * x(G)\n  X = total_domination_number(G) = 10.0\n  Y = matching_number(G) = 6.0\n  f(X) = 6.333333\n  Violation = 0.333333 > 0  ✓ (contre-exemple valide)",
+  "cost": 0.494
 }

@@ -8,14 +8,14 @@
   "x_name": "radius",
   "y_name": "independence_number",
   "sign": "<=",
-  "found": false,
-  "time_s": 0.354,
-  "best_violation": -1.156143,
-  "best_graph6": ">>graph6<<Iz~~zjhxw",
+  "found": true,
+  "time_s": 0.592,
+  "best_violation": 0.201,
+  "best_graph6": ">>graph6<<LwkD\\S?yv?_COG",
   "invariants": {
-    "radius": 1.0,
-    "independence_number": 2.0
+    "independence_number": 6.0,
+    "radius": 3.0
   },
-  "proof": "Pas de contre-exemple trouvé. Meilleure violation: -1.1561",
-  "cost": 120.0
+  "proof": "Conjecture #5998: If G is a connected graph, claw_free, x = radius and y = independence_number, then y(G) <= - 19407/7000 + 115/14 * x(G) - 71/28 * x(G)² + 1/4 * x(G)³\n  X = radius(G) = 3.0\n  Y = independence_number(G) = 6.0\n  f(X) = 5.799000\n  Violation = 0.201000 > 0  ✓ (contre-exemple valide)",
+  "cost": 0.592
 }

@@ -8,7 +8,7 @@
   "y_name": "matching_number",
   "sign": ">=",
   "found": true,
-  "time_s": 0.013,
+  "time_s": 0.012,
   "best_violation": 0.168116,
   "best_graph6": ">>graph6<<LU?GAGAAaG?Co?",
   "invariants": {
@@ -16,5 +16,5 @@
     "matching_number": 5.0
   },
   "proof": "Conjecture #3157: If G is a connected graph, x = proximity and y = matching_number, then y(G) >= 59/5 - 572/15 * x(G)\n  X = proximity(G) = 0.17391304347826086\n  Y = matching_number(G) = 5.0\n  f(X) = 5.168116\n  Violation = 0.168116 > 0  ✓ (contre-exemple valide)",
-  "cost": 0.013
+  "cost": 0.012
 }

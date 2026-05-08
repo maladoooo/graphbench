@@ -1,0 +1,34 @@
+[
+  {
+    "label": "iter2",
+    "code": "def heuristic_score(G, invariants, conjecture):\n    violation = conjecture.violation(invariants)\n    # Calcul du bonus pour la régularité\n    regularity_bonus = 0.5 * (5 - G.number_of_nodes()) / 5\n    # Calcul du bonus pour la densité (trop dense)\n    density_bonus = -0.2 * min(1, invariants.get(\"density\", 0) - 0.6)\n    # Calcul du bonus pour la densité (trop creuse)\n    density_bonus += -0.5 * min(1, (1 - invariants.get(\"density\", 0)) - 0.7)\n    # Calcul du bonus pour le diamètre\n    if G.number_of_nodes() > 10:\n        diameter_bonus = 0.1 * G.diameter() / G.number_of_nodes()\n    else:\n        diameter_bonus = 0\n    # Calcul de la pénalité pour un grand nombre de sommets\n    node_penalty = -0.1 * G.number_of_nodes() / 100\n    # Calcul de la pénalité pour un graphe trop dense\n    if invariants.get(\"density\", 0) > 0.8:\n        density_penalty = -0.3\n    else:\n        density_penalty = 0\n    # Calcul de la pénalité pour un graphe trop creux\n    if invariants.get(\"density\", 0) < 0.2:\n        density_penalty += -0.2\n    else:\n        density_penalty += 0\n    # Calcul du score total\n    bonus = regularity_bonus + diameter_bonus + density_bonus + density_penalty / 2 + node_penalty / 2\n    return 10.0 * violation + bonus",
+    "found": 6,
+    "score": 120.28507358502247,
+    "avg_time": 0.04751226417041229,
+    "eval_elapsed": 0.7
+  },
+  {
+    "label": "seed",
+    "code": "def heuristic_score(G, invariants, conjecture):\n    \"\"\"Fonction de base : score = violation pure.\"\"\"\n    return conjecture.violation(invariants)\n",
+    "found": 6,
+    "score": 120.51164958199661,
+    "avg_time": 0.08527493033276794,
+    "eval_elapsed": 0.6
+  },
+  {
+    "label": "iter3",
+    "code": "def heuristic_score(G, invariants, conjecture):\n    violation = conjecture.violation(invariants)\n    return 10.0 * violation + (\n        0.5 * ((5 - G.number_of_nodes()) / 5 if G.number_of_nodes() < 5 else 0)\n        - 0.2 * min(1, max(0, invariants.get(\"density\", 0) - 0.4))\n        - 0.5 * min(1, max(0, (1 - invariants.get(\"density\", 0)) - 0.3))\n        if G.number_of_nodes() > 10 else \n        -0.1 * (G.number_of_nodes() / 5)\n    )",
+    "found": 6,
+    "score": 120.52387912597624,
+    "avg_time": 0.08731318766270608,
+    "eval_elapsed": 0.7
+  },
+  {
+    "label": "iter1",
+    "code": "def heuristic_score(G, invariants, conjecture):\n    violation = conjecture.violation(invariants)\n    # Calcul du bonus pour la régularité\n    regularity_bonus = 0.5 * (5 - G.number_of_nodes()) / 5\n    # Calcul du bonus pour la densité (trop dense)\n    density_bonus = -0.2 * min(1, invariants.get(\"density\", 0) - 0.6)\n    # Calcul du bonus pour la densité (trop creuse)\n    density_bonus += -0.5 * min(1, (1 - invariants.get(\"density\", 0)) - 0.7)\n    # Calcul de la pénalité pour un grand nombre de sommets\n    node_penalty = -0.1 * G.number_of_nodes() / 100\n    # Calcul de la pénalité pour un grand diamètre\n    diameter_penalty = -1.0 * min(1, invariants.get(\"diameter\", float(\"inf\")) / 10)\n    # Calcul de la pénalité pour un grand degré maximum\n    max_degree_penalty = -0.5 * min(1, max(0, invariants.get(\"max_degree\", -1)) / 10)\n    # Calcul de la pénalité pour une faible densité de degré moyen\n    avg_degree_penalty = -0.2 * min(1, invariants.get(\"average_degree\", -1))\n    # Calcul du bonus total\n    bonus = regularity_bonus + density_bonus + node_penalty + diameter_penalty + max_degree_penalty + avg_degree_penalty\n    return 10.0 * violation + bonus",
+    "found": 4,
+    "score": 360.14484487297887,
+    "avg_time": 0.03621121824471629,
+    "eval_elapsed": 0.6
+  }
+]

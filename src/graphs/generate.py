@@ -51,14 +51,36 @@ def generate_smart(
         return _best_clique_plus_path(conjecture, rng)
 
     # --- Stratégie 4 : second_smallest_laplace_eigenvalue vs n'importe quoi ---
-    # Deux cliques reliées par un pont : lambda2 petite, avg_degree/independence_number contrôlables
+    # Pour claw_free : barbell (deux cliques reliées par un pont) → alg_conn très petite
+    # Pour autres graphes : deux cliques reliées par un pont
     if "second_smallest_laplace_eigenvalue" in (x, y):
+        if "claw_free" in conjecture.subgroups:
+            # Si diameter est aussi impliqué ET sign="<=" (barbell a diameter=3 trop petit):
+            # On essaie d'abord des cycles (grand diamètre + petite alg_conn).
+            # NB: pour sign=">=", le barbell (small diam) est correct → pas de cycle filter.
+            if "diameter" in (x, y) and conjecture.sign == "<=":
+                result = _best_cycle_for_lambda_diameter(conjecture, rng)
+                if result is not None:
+                    return result
+            return _best_barbell_claw_free(conjecture, rng)
         return _best_two_cliques(conjecture, rng)
 
-    # --- Stratégie 4b : remoteness dans un arbre ---
+    # --- Stratégie 4b : radius dans graphe claw_free ---
+    # Cycles C_k : naturellement claw_free, radius = k//2, domination/independence contrôlables
+    if "radius" in (x, y) and "claw_free" in conjecture.subgroups:
+        return _best_cycle_claw_free(conjecture, rng)
+
+    # --- Stratégie 4c : remoteness dans un arbre ---
     # Arbre en "balai" : deux hubs reliés par un long chemin + feuilles
     if "remoteness" in (x, y) and "tree" in conjecture.subgroups:
         return _best_broom_tree(conjecture, rng)
+
+    # --- Stratégie 4d : remoteness vs matching/vertex_cover (graphe general) ---
+    # Pour violer : graphe dense + grande remoteness → chercher des graphes de n=10..20 nœuds
+    if "remoteness" in (x, y) and any(v in (x, y) for v in [
+        "matching_number", "vertex_cover_number", "independence_number"
+    ]):
+        return _best_dense_for_remoteness(conjecture, rng)
 
     # --- Stratégie 5 : independence_number vs total_domination_number ---
     if "independence_number" in (x, y) and "total_domination_number" in (x, y):
@@ -164,6 +186,53 @@ def _quick_invariants(G: nx.Graph, x_name: str, y_name: str) -> Optional[dict]:
                 result[name] = float(nx.diameter(G))
             else:
                 result[name] = float("inf")
+        elif name == "radius":
+            if nx.is_connected(G) and n > 1:
+                result[name] = float(nx.radius(G))
+            else:
+                result[name] = float("inf")
+        elif name == "total_domination_number":
+            # Greedy approximation (non-optimal mais rapide)
+            if n <= 1:
+                result[name] = 0.0
+            else:
+                dominated = set()
+                domset = []
+                nodes_sorted = sorted(G.nodes(), key=lambda v: G.degree(v), reverse=True)
+                for v in nodes_sorted:
+                    if v not in dominated:
+                        # total domination: v doit avoir un voisin dans domset
+                        # On cherche un voisin non couvert
+                        nb = set(G.neighbors(v))
+                        if nb - dominated:
+                            domset.append(v)
+                            dominated.update(nb)
+                # Fallback: greedy classique
+                if not dominated.issuperset(set(G.nodes())):
+                    dominated2, domset2 = set(), set()
+                    for v in nodes_sorted:
+                        if v not in dominated2:
+                            domset2.add(v)
+                            dominated2.update(G.neighbors(v))
+                    result[name] = float(len(domset2))
+                else:
+                    result[name] = float(len(domset))
+        elif name == "independent_domination_number":
+            # Greedy: independent set maximal = dominating set indépendant
+            independent = set()
+            dominated = set()
+            for v in sorted(G.nodes(), key=lambda v: G.degree(v)):
+                if v not in dominated and v not in independent:
+                    independent.add(v)
+                    dominated.update(G.neighbors(v))
+            result[name] = float(len(independent))
+        elif name == "vertex_cover_number":
+            # König: pour graphes bipartis, sinon approx greedy
+            matching = nx.max_weight_matching(G, maxcardinality=True)
+            result[name] = float(len(matching))
+        elif name == "matching_number":
+            matching = nx.max_weight_matching(G, maxcardinality=True)
+            result[name] = float(len(matching))
         elif name == "average_degree":
             result[name] = 2 * m / n if n > 0 else 0.0
         else:
@@ -266,6 +335,132 @@ def _best_regular_graph(conjecture, rng: random.Random) -> nx.Graph:
                 except Exception:
                     continue
     return best_G
+
+
+def _best_barbell_claw_free(conjecture, rng: random.Random) -> nx.Graph:
+    """
+    Barbell graph = deux cliques K_k reliées par une arête.
+    Claw_free (cliques complètes), algebraic connectivity ≈ 2/k (très petite pour k grand).
+    Idéal pour les conjectures impliquant second_smallest_laplace_eigenvalue sur claw_free.
+    Utilise compute_invariants directement pour supporter tous les invariants.
+    """
+    from ..invariants.compute import compute_invariants as _compute_inv
+    best_viol = float("-inf")
+    best_G = None
+    for k in range(4, 25):
+        G = nx.complete_graph(k)
+        H = nx.relabel_nodes(nx.complete_graph(k), {v: v + k for v in range(k)})
+        G = nx.compose(G, H)
+        G.add_edge(0, k)  # pont entre les deux cliques
+        try:
+            inv = _compute_inv(G, {conjecture.x_name, conjecture.y_name})
+            viol = conjecture.violation(inv)
+        except Exception:
+            viol = None
+        if viol is None:
+            continue
+        if viol > best_viol:
+            best_viol = viol
+            best_G = G.copy()
+            if viol > 1e-9:  # seuil epsilon pour éviter les cas limites flottants
+                return best_G
+    return best_G
+
+
+def _best_cycle_claw_free(conjecture, rng: random.Random) -> nx.Graph:
+    """
+    Cycles C_k : toujours claw_free et connexes.
+    Pour les conjectures avec radius : radius(C_k) = k//2.
+    Teste C_4 à C_20 pour trouver le meilleur contre-exemple.
+    Utilise compute_invariants directement pour supporter tous les invariants.
+    """
+    from ..invariants.compute import compute_invariants as _compute_inv
+    best_viol = float("-inf")
+    best_G = None
+    for n in range(4, 25):
+        G = nx.cycle_graph(n)
+        try:
+            inv = _compute_inv(G, {conjecture.x_name, conjecture.y_name})
+            viol = conjecture.violation(inv)
+        except Exception:
+            viol = None
+        if viol is None:
+            continue
+        if viol > best_viol:
+            best_viol = viol
+            best_G = G.copy()
+            if viol > 0:
+                return best_G
+    return best_G
+
+
+def _best_dense_for_remoteness(conjecture, rng: random.Random) -> Optional[nx.Graph]:
+    """
+    Pour les conjectures remoteness vs matching/vertex_cover/independence.
+    Teste des graphes aléatoires denses de n=10..20 nœuds.
+    La remoteness est maximisée par des graphes "lollipop" ou quasi-complets.
+    """
+    from ..invariants.compute import compute_invariants as _compute_inv
+    best_viol = float("-inf")
+    best_G = None
+    for n in range(10, 21):
+        for trial in range(5):
+            # Essayer différents types : aléatoires, lollipop, etc.
+            if trial == 0:
+                # Graphe complet moins quelques arêtes
+                G = nx.complete_graph(n)
+                edges = list(G.edges())
+                for _ in range(n // 3):
+                    if edges:
+                        e = rng.choice(edges)
+                        G.remove_edge(*e)
+                        edges.remove(e)
+                        if not nx.is_connected(G):
+                            G.add_edge(*e)
+                            edges.append(e)
+            else:
+                # Graphe aléatoire avec densité variée
+                p = 0.3 + trial * 0.1
+                seed_trial = rng.randint(0, 2**31)
+                G = nx.gnp_random_graph(n, p, seed=seed_trial)
+                if not nx.is_connected(G) or G.number_of_edges() == 0:
+                    continue
+            try:
+                inv = _compute_inv(G, {conjecture.x_name, conjecture.y_name})
+                viol = conjecture.violation(inv)
+            except Exception:
+                continue
+            if viol > best_viol:
+                best_viol = viol
+                best_G = G.copy()
+                if viol > 1e-9:
+                    return best_G
+    return best_G if best_viol > float("-inf") else None
+
+
+def _best_cycle_for_lambda_diameter(conjecture, rng: random.Random) -> Optional[nx.Graph]:
+    """
+    Cycles C_n pour les conjectures diameter vs second_smallest_laplace_eigenvalue (claw_free).
+    Les cycles ont grand diamètre (n//2) et petite connectivité algébrique (≈4π²/n²).
+    Teste C_4 à C_60. Si aucun n'a violation > 0, retourne None (fallback barbell).
+    """
+    from ..invariants.compute import compute_invariants as _compute_inv
+    best_viol = float("-inf")
+    best_G = None
+    for n in range(4, 61):
+        G = nx.cycle_graph(n)
+        try:
+            inv = _compute_inv(G, {conjecture.x_name, conjecture.y_name})
+            viol = conjecture.violation(inv)
+        except Exception:
+            continue
+        if viol > best_viol:
+            best_viol = viol
+            best_G = G.copy()
+            if viol > 0:
+                return best_G
+    # Retourner seulement si on a trouvé une violation > 0; sinon None (fallback barbell)
+    return best_G if best_viol > 0 else None
 
 
 def _best_dense_minus_matching(conjecture, rng: random.Random) -> nx.Graph:

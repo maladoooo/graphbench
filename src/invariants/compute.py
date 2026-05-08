@@ -260,7 +260,20 @@ def _largest_distance_eigenvalue(G: nx.Graph) -> float:
 
 
 def _algebraic_connectivity(G: nx.Graph) -> float:
-    """Connectivité algébrique = 2ème plus petite valeur propre du Laplacien."""
-    if not nx.is_connected(G) or G.number_of_nodes() <= 1:
+    """Connectivité algébrique = 2ème plus petite valeur propre du Laplacien.
+    Utilise numpy.linalg.eigvalsh (déterministe, fiable) plutôt que ARPACK
+    qui peut diverger sur les graphes quasi-déconnectés (barbell, λ₂ ≈ 0).
+    """
+    import numpy as np
+    n = G.number_of_nodes()
+    if not nx.is_connected(G) or n <= 1:
         return 0.0
-    return float(nx.algebraic_connectivity(G))
+    # Pour les grands graphes, numpy eigvalsh est O(n³) — limiter à n ≤ 300
+    if n > 300:
+        try:
+            return float(nx.algebraic_connectivity(G, tol=1e-6))
+        except Exception:
+            return 0.0
+    L = nx.laplacian_matrix(G).toarray().astype(float)
+    eigenvalues = np.linalg.eigvalsh(L)
+    return float(sorted(eigenvalues)[1])

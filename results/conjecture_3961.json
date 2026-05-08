@@ -8,13 +8,13 @@
   "y_name": "average_degree",
   "sign": "<=",
   "found": true,
-  "time_s": 0.012,
+  "time_s": 0.009,
   "best_violation": 0.498112,
   "best_graph6": ">>graph6<<W~~~~~~~~~~~_???_?W?F??{?Bw?Fw?F{?B~??~w?F~_?^~",
   "invariants": {
     "second_smallest_laplace_eigenvalue": 0.144345,
     "average_degree": 11.083333
   },
-  "proof": "Conjecture #3961: If G is a connected graph, x = second_smallest_laplace_eigenvalue and y = average_degree, then y(G) <= 3815729/366403 + 512942/427425 * x(G) - 76519/779410 * x(G)² + 3112/494493 * x(G)³\n  X = second_smallest_laplace_eigenvalue(G) = 0.14434539959895615\n  Y = average_degree(G) = 11.083333333333334\n  f(X) = 10.585221\n  Violation = 0.498112 > 0  ✓ (contre-exemple valide)",
-  "cost": 0.012
+  "proof": "Conjecture #3961: If G is a connected graph, x = second_smallest_laplace_eigenvalue and y = average_degree, then y(G) <= 3815729/366403 + 512942/427425 * x(G) - 76519/779410 * x(G)² + 3112/494493 * x(G)³\n  X = second_smallest_laplace_eigenvalue(G) = 0.1443453995989583\n  Y = average_degree(G) = 11.083333333333334\n  f(X) = 10.585221\n  Violation = 0.498112 > 0  ✓ (contre-exemple valide)",
+  "cost": 0.009
 }

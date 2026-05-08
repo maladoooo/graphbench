@@ -8,13 +8,13 @@
   "y_name": "triangle_number",
   "sign": "<=",
   "found": true,
-  "time_s": 0.013,
+  "time_s": 0.015,
   "best_violation": 1.0,
   "best_graph6": ">>graph6<<M{C?GWDe?blO@gW__",
   "invariants": {
-    "maximum_degree": 4.0,
-    "triangle_number": 11.0
+    "triangle_number": 11.0,
+    "maximum_degree": 4.0
   },
   "proof": "Conjecture #886: If G is a connected graph, x = maximum_degree and y = triangle_number, then y(G) <= - 1/6 * x(G) + 1/6 * x(G)³\n  X = maximum_degree(G) = 4.0\n  Y = triangle_number(G) = 11.0\n  f(X) = 10.000000\n  Violation = 1.000000 > 0  ✓ (contre-exemple valide)",
-  "cost": 0.013
+  "cost": 0.015
 }

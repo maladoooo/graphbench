@@ -9,13 +9,13 @@
   "y_name": "proximity",
   "sign": ">=",
   "found": true,
-  "time_s": 0.052,
-  "best_violation": 0.007273,
-  "best_graph6": ">>graph6<<I~{B_Ig@_",
+  "time_s": 0.132,
+  "best_violation": 0.006434,
+  "best_graph6": ">>graph6<<P~~~wF}?PG?ACwQ???LGO?A?",
   "invariants": {
-    "proximity": 0.272727,
-    "diameter": 5.0
+    "diameter": 6.0,
+    "proximity": 0.25
   },
-  "proof": "Conjecture #5968: If G is a connected graph, claw_free, x = diameter and y = proximity, then y(G) >= 1283/3225 - 76/3225 * x(G)\n  X = diameter(G) = 5.0\n  Y = proximity(G) = 0.2727272727272727\n  f(X) = 0.280000\n  Violation = 0.007273 > 0  ✓ (contre-exemple valide)",
-  "cost": 0.052
+  "proof": "Conjecture #5968: If G is a connected graph, claw_free, x = diameter and y = proximity, then y(G) >= 1283/3225 - 76/3225 * x(G)\n  X = diameter(G) = 6.0\n  Y = proximity(G) = 0.25\n  f(X) = 0.256434\n  Violation = 0.006434 > 0  ✓ (contre-exemple valide)",
+  "cost": 0.132
 }

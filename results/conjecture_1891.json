@@ -7,14 +7,14 @@
   "x_name": "vertex_cover_number",
   "y_name": "total_domination_number",
   "sign": "<=",
-  "found": false,
-  "time_s": 0.122,
-  "best_violation": 0.0,
-  "best_graph6": ">>graph6<<F@`aO",
+  "found": true,
+  "time_s": 0.08,
+  "best_violation": 0.5,
+  "best_graph6": ">>graph6<<Ja?a?C@GOo?",
   "invariants": {
-    "vertex_cover_number": 3.0,
-    "total_domination_number": 5.0
+    "vertex_cover_number": 4.0,
+    "total_domination_number": 7.0
   },
-  "proof": "Pas de contre-exemple trouvé. Meilleure violation: 0.0000",
-  "cost": 120.0
+  "proof": "Conjecture #1891: If G is a connected graph, x = vertex_cover_number and y = total_domination_number, then y(G) <= 1/2 + 3/2 * x(G)\n  X = vertex_cover_number(G) = 4.0\n  Y = total_domination_number(G) = 7.0\n  f(X) = 6.500000\n  Violation = 0.500000 > 0  ✓ (contre-exemple valide)",
+  "cost": 0.08
 }

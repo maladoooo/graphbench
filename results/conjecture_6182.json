@@ -8,14 +8,14 @@
   "x_name": "maximum_degree",
   "y_name": "average_degree",
   "sign": ">=",
-  "found": false,
-  "time_s": 1.26,
-  "best_violation": -0.250744,
-  "best_graph6": ">>graph6<<Cd",
+  "found": true,
+  "time_s": 0.027,
+  "best_violation": 0.061786,
+  "best_graph6": ">>graph6<<HySSF@W",
   "invariants": {
-    "maximum_degree": 2.0,
-    "average_degree": 1.5
+    "maximum_degree": 6.0,
+    "average_degree": 3.111111
   },
-  "proof": "Pas de contre-exemple trouvé. Meilleure violation: -0.2507",
-  "cost": 120.0
+  "proof": "Conjecture #6182: If G is a connected graph, claw_free, x = maximum_degree and y = average_degree, then y(G) >= 130981/231000 + 9293/33264 * x(G) + 101/3024 * x(G)² - 1/792 * x(G)³\n  X = maximum_degree(G) = 6.0\n  Y = average_degree(G) = 3.111111111111111\n  f(X) = 3.172898\n  Violation = 0.061786 > 0  ✓ (contre-exemple valide)",
+  "cost": 0.027
 }

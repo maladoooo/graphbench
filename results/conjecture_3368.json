@@ -8,13 +8,13 @@
   "y_name": "matching_number",
   "sign": ">=",
   "found": true,
-  "time_s": 0.181,
-  "best_violation": 0.268754,
-  "best_graph6": ">>graph6<<N@C?__?oHG?_?C?@G?G",
+  "time_s": 1.171,
+  "best_violation": 0.168086,
+  "best_graph6": ">>graph6<<M`A@@?H_@?O?G?Q??",
   "invariants": {
-    "remoteness": 0.28,
-    "matching_number": 5.0
+    "matching_number": 4.0,
+    "remoteness": 0.325
   },
-  "proof": "Conjecture #3368: If G is a connected graph, x = remoteness and y = matching_number, then y(G) >= 502194/27901 - 61269445/912567 * x(G) + 30839049/348815 * x(G)² - 5569307/141716 * x(G)³\n  X = remoteness(G) = 0.28\n  Y = matching_number(G) = 5.0\n  f(X) = 5.268754\n  Violation = 0.268754 > 0  ✓ (contre-exemple valide)",
-  "cost": 0.181
+  "proof": "Conjecture #3368: If G is a connected graph, x = remoteness and y = matching_number, then y(G) >= 502194/27901 - 61269445/912567 * x(G) + 30839049/348815 * x(G)² - 5569307/141716 * x(G)³\n  X = remoteness(G) = 0.325\n  Y = matching_number(G) = 4.0\n  f(X) = 4.168086\n  Violation = 0.168086 > 0  ✓ (contre-exemple valide)",
+  "cost": 1.171
 }

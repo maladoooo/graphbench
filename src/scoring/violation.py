@@ -24,7 +24,7 @@ def heuristic_score(G: nx.Graph, invariants: Dict[str, float], conjecture) -> fl
     """
     Fonction de score heuristique (Phase 2).
     À améliorer via FunSearch.
-    
+
     Paramètres récupérés mais non tous utilisés → prêts pour l'évolution.
     """
     violation = conjecture.violation(invariants)
@@ -43,11 +43,12 @@ def heuristic_score(G: nx.Graph, invariants: Dict[str, float], conjecture) -> fl
         density = 2 * m / (n * (n - 1))
 
     # Score de base: violation pondérée + bonus structurels
+    # Pénalité de taille très réduite pour ne pas bloquer l'exploration de grands graphes
     return (
         10.0 * violation
         + 0.3 * diam
         + 0.2 * Delta
         + 0.1 * triangles
-        - 0.05 * n
-        - 0.2 * abs(density - 0.5)
+        - 0.005 * n
+        - 0.1 * abs(density - 0.5)
     )

@@ -8,14 +8,14 @@
   "x_name": "radius",
   "y_name": "independent_domination_number",
   "sign": "<=",
-  "found": false,
-  "time_s": 0.326,
-  "best_violation": -0.156143,
-  "best_graph6": ">>graph6<<Iz~~zjhxw",
+  "found": true,
+  "time_s": 0.0,
+  "best_violation": 0.486714,
+  "best_graph6": ">>graph6<<GhCGKC",
   "invariants": {
-    "radius": 1.0,
-    "independent_domination_number": 2.0
+    "independent_domination_number": 4.0,
+    "radius": 4.0
   },
-  "proof": "Pas de contre-exemple trouvé. Meilleure violation: -0.1561",
-  "cost": 120.0
+  "proof": "Conjecture #6000: If G is a connected graph, claw_free, x = radius and y = independent_domination_number, then y(G) <= - 61407/7000 + 667/42 * x(G) - 155/28 * x(G)² + 7/12 * x(G)³\n  X = radius(G) = 4.0\n  Y = independent_domination_number(G) = 4.0\n  f(X) = 3.513286\n  Violation = 0.486714 > 0  ✓ (contre-exemple valide)",
+  "cost": 0.0
 }
