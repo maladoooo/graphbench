@@ -10,6 +10,9 @@ Usage:
 
     # Phase 2: batch complet
     python -m src.main --all --time 60 --output results/results.csv
+
+    # Reprendre un batch : réutiliser les JSON déjà présents dans results/
+    python -m src.main --all --time 60 --resume
 """
 from __future__ import annotations
 import argparse
@@ -21,6 +24,7 @@ from pathlib import Path
 from typing import List, Optional
 
 from .benchmark.load_benchmark import load_benchmark, load_conjecture_by_id
+from .funsearch.funsearch import FunSearch
 from .benchmark.conjecture import Conjecture
 from .search.search_simple import search, SearchResult
 from .graphs.classes import check_graph_class
@@ -65,6 +69,32 @@ def run_single(
     return result
 
 
+def _load_cached_result(path: Path, expected_id: int) -> Optional[SearchResult]:
+    """Charge un SearchResult depuis un JSON existant si le fichier est valide."""
+    if not path.is_file():
+        return None
+    try:
+        with open(path, encoding="utf-8") as f:
+            data = json.load(f)
+        cid = int(data["conjecture_id"])
+        if cid != expected_id:
+            return None
+        inv = data.get("invariants") or {}
+        return SearchResult(
+            conjecture_id=cid,
+            found=bool(data["found"]),
+            time_s=float(data["time_s"]),
+            best_violation=float(data["best_violation"]),
+            best_graph=None,
+            best_graph6=data.get("best_graph6") or "",
+            best_invariants={k: float(v) for k, v in inv.items()},
+            proof=data.get("proof") or "",
+            cost=float(data.get("cost", 120.0)),
+        )
+    except (OSError, json.JSONDecodeError, KeyError, TypeError, ValueError):
+        return None
+
+
 def run_batch(
     conjectures: List[Conjecture],
     time_limit: float,
@@ -72,14 +102,31 @@ def run_batch(
     verbose: bool,
     use_heuristic: bool = False,
     stagnation_limit: Optional[int] = None,
+    resume: bool = False,
 ) -> None:
     """Lance la recherche sur toutes les conjectures et sauvegarde les résultats."""
     results = []
     total_cost = 0.0
     found_count = 0
+    cache_hits = 0
 
     for i, conj in enumerate(conjectures, 1):
         print(f"\n[{i}/{len(conjectures)}] Conjecture #{conj.id} ({conj.subgroups})")
+        json_path = RESULTS_DIR / f"conjecture_{conj.id}.json"
+        if resume:
+            cached = _load_cached_result(json_path, conj.id)
+            if cached is not None:
+                result = cached
+                cache_hits += 1
+                results.append(result)
+                total_cost += result.cost
+                status = "✅ TROUVÉ" if result.found else "❌ échec"
+                print(f"  ⏭️  Cache (--resume) | {status} | violation={result.best_violation:.4f} | t={result.time_s:.2f}s | coût={result.cost:.1f}")
+                if result.found:
+                    found_count += 1
+                    print(f"  graph6: {result.best_graph6}")
+                continue
+
         result = search(conj, time_limit=time_limit, verbose=verbose,
                         use_heuristic=use_heuristic, stagnation_limit=stagnation_limit)
         results.append(result)
@@ -91,8 +138,6 @@ def run_batch(
             found_count += 1
             print(f"  graph6: {result.best_graph6}")
 
-        # Sauvegarde JSON individuelle
-        json_path = RESULTS_DIR / f"conjecture_{conj.id}.json"
         _save_result_json(result, conj, json_path)
 
     # Sauvegarde CSV global
@@ -101,6 +146,8 @@ def run_batch(
     print(f"\n{'='*60}")
     print(f"RÉSULTATS FINAUX")
     print(f"  Conjectures réfutées: {found_count}/{len(conjectures)}")
+    if resume and cache_hits:
+        print(f"  Reprise cache: {cache_hits} conjecture(s) non recalculée(s)")
     print(f"  Score total: {total_cost:.1f}")
     print(f"  Résultats CSV: {output_csv}")
 
@@ -176,6 +223,11 @@ def main() -> None:
     parser.add_argument("--heuristic", action="store_true", help="Utiliser le score heuristique (Phase 2)")
     parser.add_argument("--output", type=str, default="results/results.csv", help="Fichier CSV de sortie")
     parser.add_argument("--stagnation", type=int, default=None, help="Arrêt anticipé si pas d'amélioration après N itérations (ex: 2000)")
+    parser.add_argument("--resume", action="store_true", help="En mode batch : réutiliser results/conjecture_<id>.json si présent au lieu de recalculer")
+    parser.add_argument("--funsearch", action="store_true", help="Lancer la Phase 2 FunSearch (évolution LLM du score)")
+    parser.add_argument("--funsearch-iter", type=int, default=5, help="Nombre d'itérations FunSearch (défaut: 5)")
+    parser.add_argument("--funsearch-time", type=float, default=15.0, help="Temps par conjecture lors de l'évaluation FunSearch (défaut: 15s)")
+    parser.add_argument("--api-key", type=str, default=None, help="Clé API Anthropic (ou variable ANTHROPIC_API_KEY)")
 
     args = parser.parse_args()
 
@@ -188,11 +240,35 @@ def main() -> None:
             run_single(conj, time_limit=args.time, verbose=args.verbose, use_heuristic=args.heuristic)
         else:
             conjectures = load_benchmark(ids=args.id)
-            run_batch(conjectures, time_limit=args.time, output_csv=output_path,
-                      verbose=args.verbose, use_heuristic=args.heuristic)
+            run_batch(
+                conjectures,
+                time_limit=args.time,
+                output_csv=output_path,
+                verbose=args.verbose,
+                use_heuristic=args.heuristic,
+                stagnation_limit=args.stagnation,
+                resume=args.resume,
+            )
+
+    elif args.funsearch:
+        # Phase 2 : FunSearch — doit être AVANT le batch normal
+        subgroup_filter = [args.subgroup] if args.subgroup else None
+        conjectures = load_benchmark(subgroup_filter=subgroup_filter)
+        if args.max:
+            conjectures = conjectures[:args.max]
+        print(f"FunSearch sur {len(conjectures)} conjectures | {args.funsearch_iter} itérations")
+        fs = FunSearch(
+            conjectures=conjectures,
+            n_iterations=args.funsearch_iter,
+            eval_time_limit=args.funsearch_time,
+            output_dir=output_path.parent / "funsearch",
+            api_key=args.api_key,
+            verbose=args.verbose,
+        )
+        fs.run()
 
     elif args.all or args.subgroup or args.max:
-        # Phase 2: batch
+        # Phase 1 : batch normal
         subgroup_filter = [args.subgroup] if args.subgroup else None
         conjectures = load_benchmark(subgroup_filter=subgroup_filter)
         if args.max:
@@ -205,6 +281,7 @@ def main() -> None:
             verbose=args.verbose,
             use_heuristic=args.heuristic,
             stagnation_limit=args.stagnation,
+            resume=args.resume,
         )
 
     else:
@@ -213,6 +290,7 @@ def main() -> None:
         print("  python -m src.main --id 981 --time 30 --verbose")
         print("  python -m src.main --subgroup connected --max 5 --time 60")
         print("  python -m src.main --all --time 60 --output results/results.csv")
+        print("  python -m src.main --subgroup connected --max 10 --time 60 --resume")
 
 
 if __name__ == "__main__":
