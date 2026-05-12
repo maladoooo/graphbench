@@ -10,7 +10,7 @@
   "found": true,
   "time_s": 0.0,
   "best_violation": 0.060606,
-  "best_graph6": ">>graph6<<J~aCCA?_C??",
+  "best_graph6": "J~aCCA?_C??",
   "invariants": {
     "average_degree": 2.363636,
     "clique_number": 4.0

@@ -9,13 +9,13 @@
   "y_name": "proximity",
   "sign": ">=",
   "found": true,
-  "time_s": 0.034,
+  "time_s": 0.003,
   "best_violation": 0.001926,
-  "best_graph6": ">>graph6<<HACXDB?",
+  "best_graph6": "H{CGGC@",
   "invariants": {
     "largest_distance_eigenvalue": 25.982738,
     "proximity": 0.228571
   },
-  "proof": "Conjecture #7694: If G is a connected graph, claw_free, x = largest_distance_eigenvalue and y = proximity, then y(G) >= 346411/982152 - 4319/918263 * x(G)\n  X = largest_distance_eigenvalue(G) = 25.982737621388807\n  Y = proximity(G) = 0.22857142857142856\n  f(X) = 0.230498\n  Violation = 0.001926 > 0  ✓ (contre-exemple valide)",
-  "cost": 0.034
+  "proof": "Conjecture #7694: If G is a connected graph, claw_free, x = largest_distance_eigenvalue and y = proximity, then y(G) >= 346411/982152 - 4319/918263 * x(G)\n  X = largest_distance_eigenvalue(G) = 25.98273762138877\n  Y = proximity(G) = 0.22857142857142856\n  f(X) = 0.230498\n  Violation = 0.001926 > 0  ✓ (contre-exemple valide)",
+  "cost": 0.003
 }

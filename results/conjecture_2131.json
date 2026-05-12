@@ -10,7 +10,7 @@
   "found": true,
   "time_s": 0.0,
   "best_violation": 0.008547,
-  "best_graph6": ">>graph6<<JKaA`A?_C??",
+  "best_graph6": "JKaA`A?_C??",
   "invariants": {
     "matching_number": 3.0,
     "proximity": 0.222222

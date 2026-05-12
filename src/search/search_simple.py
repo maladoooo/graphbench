@@ -13,7 +13,6 @@ from __future__ import annotations
 import random
 import time
 import json
-import io
 import signal
 import sys
 from dataclasses import dataclass, field
@@ -25,7 +24,7 @@ from ..benchmark.conjecture import Conjecture
 from ..graphs.generate import generate_initial_graph
 from ..graphs.mutate import mutate
 from ..graphs.repair import repair
-from ..graphs.classes import check_graph_class
+from ..graphs.classes import check_graph_class, UnknownGraphClassError
 from ..invariants.compute import compute_invariants, InvariantNotImplementedError
 from ..scoring.violation import violation_score, heuristic_score
 
@@ -275,10 +274,10 @@ def _search_inner(
 
     required_invariants = {conjecture.x_name, conjecture.y_name}
 
-    # Vérifier que les invariants sont implémentés
+    # Vérifier que les invariants et classes sont supportés
     try:
         _test_invariants(required_invariants, conjecture.subgroups)
-    except InvariantNotImplementedError as e:
+    except (InvariantNotImplementedError, UnknownGraphClassError) as e:
         return SearchResult(
             conjecture_id=conjecture.id,
             found=False,
@@ -286,6 +285,7 @@ def _search_inner(
             best_violation=float("-inf"),
             best_graph=None,
             best_graph6="",
+            best_invariants={},
             proof=f"ERREUR: {e}",
             cost=120.0,
         )
@@ -500,22 +500,23 @@ def _search_inner(
 
 
 def _to_graph6(G: Optional[nx.Graph]) -> str:
-    """Convertit G en format graph6."""
+    """Convertit G en format graph6 (sans header >>graph6<<)."""
     if G is None:
         return ""
     try:
-        buf = io.BytesIO()
-        nx.readwrite.write_graph6(G, buf)
-        buf.seek(0)
-        return buf.read().decode("ascii").strip()
+        return nx.to_graph6_bytes(G, header=False).decode("ascii").strip()
     except Exception:
         return ""
 
 
 def _test_invariants(names: set, subgroups: list) -> None:
-    """Teste que les invariants sont calculables sur un graphe minimal."""
+    """Teste que les invariants et classes sont supportés."""
     from ..graphs.generate import generate_initial_graph
     from ..invariants.compute import compute_invariant
+    from ..graphs.classes import unknown_classes, UnknownGraphClassError
+    unknown = unknown_classes(subgroups)
+    if unknown:
+        raise UnknownGraphClassError(unknown[0])
     G = generate_initial_graph(subgroups, n=6, seed=0)
     for name in names:
         compute_invariant(G, name)  # Lève InvariantNotImplementedError si inconnu

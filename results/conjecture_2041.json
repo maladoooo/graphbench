@@ -8,13 +8,13 @@
   "y_name": "matching_number",
   "sign": ">=",
   "found": true,
-  "time_s": 0.003,
+  "time_s": 0.006,
   "best_violation": 0.5,
-  "best_graph6": ">>graph6<<Cs",
+  "best_graph6": "Cs",
   "invariants": {
-    "independent_domination_number": 3.0,
-    "matching_number": 1.0
+    "matching_number": 1.0,
+    "independent_domination_number": 3.0
   },
   "proof": "Conjecture #2041: If G is a connected graph, x = independent_domination_number and y = matching_number, then y(G) >= 3/4 + 1/4 * x(G)\n  X = independent_domination_number(G) = 3.0\n  Y = matching_number(G) = 1.0\n  f(X) = 1.500000\n  Violation = 0.500000 > 0  ✓ (contre-exemple valide)",
-  "cost": 0.003
+  "cost": 0.006
 }

@@ -11,10 +11,10 @@
   "found": true,
   "time_s": 0.001,
   "best_violation": 1.0,
-  "best_graph6": ">>graph6<<JCGY?G?_Mo?",
+  "best_graph6": "JCGY?G?_Mo?",
   "invariants": {
-    "total_domination_number": 7.0,
-    "matching_number": 5.0
+    "matching_number": 5.0,
+    "total_domination_number": 7.0
   },
   "proof": "Conjecture #6903: If G is a connected graph, claw_free, x = matching_number and y = total_domination_number, then y(G) <= 1 + x(G)\n  X = matching_number(G) = 5.0\n  Y = total_domination_number(G) = 7.0\n  f(X) = 6.000000\n  Violation = 1.000000 > 0  ✓ (contre-exemple valide)",
   "cost": 0.001

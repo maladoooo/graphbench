@@ -11,10 +11,10 @@
   "found": true,
   "time_s": 0.006,
   "best_violation": 0.013277,
-  "best_graph6": ">>graph6<<U~~~~~~~~~o??@?@_?w?N?@{?Fw?Nw?N{?F~?@~w",
+  "best_graph6": "U~~~~~~~~~o??@?@_?w?N?@{?Fw?Nw?N{?F~?@~w",
   "invariants": {
-    "second_smallest_laplace_eigenvalue": 0.155711,
-    "diameter": 3.0
+    "diameter": 3.0,
+    "second_smallest_laplace_eigenvalue": 0.155711
   },
   "proof": "Conjecture #4288: If G is a connected graph, tree, x = diameter and y = second_smallest_laplace_eigenvalue, then y(G) >= 1559831/570111 - 277470/192521 * x(G) + 35982/155885 * x(G)² - 4593/386683 * x(G)³\n  X = diameter(G) = 3.0\n  Y = second_smallest_laplace_eigenvalue(G) = 0.15571122977523905\n  f(X) = 0.168988\n  Violation = 0.013277 > 0  ✓ (contre-exemple valide)",
   "cost": 0.006

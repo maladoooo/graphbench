@@ -11,7 +11,7 @@
   "found": true,
   "time_s": 0.0,
   "best_violation": 0.016725,
-  "best_graph6": ">>graph6<<Kz~~zjhx{Bvp",
+  "best_graph6": "Kz~~zjhx{Bvp",
   "invariants": {
     "triangle_number": 81.0,
     "largest_eigenvalue": 8.052207

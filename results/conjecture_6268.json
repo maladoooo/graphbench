@@ -9,13 +9,13 @@
   "y_name": "maximum_degree",
   "sign": "<=",
   "found": true,
-  "time_s": 0.018,
-  "best_violation": 0.05,
-  "best_graph6": ">>graph6<<Ito?_?D?o",
+  "time_s": 0.0,
+  "best_violation": 0.09375,
+  "best_graph6": "O~}?GC@?G?_@?@??_?G?@",
   "invariants": {
-    "average_degree": 2.2,
-    "maximum_degree": 4.0
+    "average_degree": 2.625,
+    "maximum_degree": 5.0
   },
-  "proof": "Conjecture #6268: If G is a connected graph, claw_free, x = average_degree and y = maximum_degree, then y(G) <= - 1 + 9/4 * x(G)\n  X = average_degree(G) = 2.2\n  Y = maximum_degree(G) = 4.0\n  f(X) = 3.950000\n  Violation = 0.050000 > 0  ✓ (contre-exemple valide)",
-  "cost": 0.018
+  "proof": "Conjecture #6268: If G is a connected graph, claw_free, x = average_degree and y = maximum_degree, then y(G) <= - 1 + 9/4 * x(G)\n  X = average_degree(G) = 2.625\n  Y = maximum_degree(G) = 5.0\n  f(X) = 4.906250\n  Violation = 0.093750 > 0  ✓ (contre-exemple valide)",
+  "cost": 0.0
 }

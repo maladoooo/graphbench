@@ -246,11 +246,23 @@ class FunSearch:
     def _print_summary(self):
         """Affiche le classement final des fonctions."""
         print(f"\n{'='*60}")
-        print("🏆 CLASSEMENT FINAL DES FONCTIONS")
+        print("CLASSEMENT FINAL — FunSearch (Phase 2)")
         print(f"{'='*60}")
         n_eval = len(self._eval_conjectures)
         for i, entry in enumerate(self.population[:5], 1):
-            print(f"  #{i} [{entry['label']}] : {entry['found']}/{n_eval} trouvées | coût={entry['score']:.1f}")
+            avg = entry.get("avg_time", 0.0)
+            print(
+                f"  #{i} [{entry['label']:12s}] "
+                f"réfutées={entry['found']}/{n_eval} | "
+                f"score_total={entry['score']:.3f} | "
+                f"temps_moyen={avg:.3f}s"
+            )
+        if self.population:
+            best = self.population[0]
+            print(f"\n  Meilleure fonction : [{best['label']}]")
+            print(f"  Score total (officiel) : {best['score']:.3f}")
+            print(f"  Conjectures réfutées   : {best['found']}/{n_eval}")
+            print(f"  Temps moyen (trouvées) : {best.get('avg_time', 0.0):.3f}s")
 
     def _save_best(self):
         """Sauvegarde la meilleure fonction et les résultats."""

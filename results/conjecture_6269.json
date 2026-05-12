@@ -10,12 +10,12 @@
   "sign": "<=",
   "found": true,
   "time_s": 0.0,
-  "best_violation": 0.043243,
-  "best_graph6": ">>graph6<<Ito?_?D?o",
+  "best_violation": 0.216216,
+  "best_graph6": "O~}?GC@?G?_@?@??_?G?@",
   "invariants": {
-    "average_degree": 2.2,
-    "maximum_degree": 4.0
+    "average_degree": 2.625,
+    "maximum_degree": 5.0
   },
-  "proof": "Conjecture #6269: If G is a connected graph, claw_free, x = average_degree and y = maximum_degree, then y(G) <= - 12/37 + 72/37 * x(G)\n  X = average_degree(G) = 2.2\n  Y = maximum_degree(G) = 4.0\n  f(X) = 3.956757\n  Violation = 0.043243 > 0  ✓ (contre-exemple valide)",
+  "proof": "Conjecture #6269: If G is a connected graph, claw_free, x = average_degree and y = maximum_degree, then y(G) <= - 12/37 + 72/37 * x(G)\n  X = average_degree(G) = 2.625\n  Y = maximum_degree(G) = 5.0\n  f(X) = 4.783784\n  Violation = 0.216216 > 0  ✓ (contre-exemple valide)",
   "cost": 0.0
 }

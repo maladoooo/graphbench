@@ -51,9 +51,9 @@ def generate_smart(
         return _best_clique_plus_path(conjecture, rng)
 
     # --- Stratégie 3b : density vs remoteness ---
-    # Même structure que density+proximity (clique+chemin)
+    # Lollipop K_k+path(b) : faible density, haute remoteness (centre de clique très central)
     if "density" in (x, y) and "remoteness" in (x, y):
-        return _best_clique_plus_path(conjecture, rng)
+        return _best_lollipop(conjecture, rng)
 
     # --- Stratégie 4 : second_smallest_laplace_eigenvalue vs n'importe quoi ---
     # Pour claw_free : barbell (deux cliques reliées par un pont) → alg_conn très petite
@@ -72,12 +72,19 @@ def generate_smart(
 
     # --- Stratégie 4b : independence + radius dans graphe claw_free → triangular snake ---
     # Triangular snake : k triangles en chaîne → claw_free, radius = k//2, independence = k
+    # NB: independence + diameter → cycles (via la règle 4c ci-dessous) car triangular snake
+    #     a independence ≈ diameter et ne permet pas d'obtenir independence >> 2 + diameter
     if "independence_number" in (x, y) and "radius" in (x, y) and "claw_free" in conjecture.subgroups:
         return _best_triangular_snake_claw_free(conjecture, rng)
 
     # --- Stratégie 4c : radius OU diameter dans graphe claw_free → cycles ---
     # Cycles C_k : naturellement claw_free, radius = k//2, diameter = k//2
+    # Exception: independence + diameter (sans radius) → K_k+feuilles (claw_free).
+    # Les cycles ont independence = diameter, donc violation = -2 toujours pour ces cas.
+    # K_k+1feuille/sommet : claw_free, diameter=3, independence=k → violation=k-5 > 0 pour k>=6.
     if ("radius" in (x, y) or "diameter" in (x, y)) and "claw_free" in conjecture.subgroups:
+        if "independence_number" in (x, y) and "diameter" in (x, y) and "radius" not in (x, y):
+            return _best_clique_with_leaves_claw_free(conjecture, rng)
         return _best_cycle_claw_free(conjecture, rng)
 
     # --- Stratégie 4c : remoteness dans un arbre ---
@@ -85,12 +92,19 @@ def generate_smart(
     if "remoteness" in (x, y) and "tree" in conjecture.subgroups:
         return _best_broom_tree(conjecture, rng)
 
-    # --- Stratégie 4d : remoteness vs matching/vertex_cover (graphe general) ---
-    # Pour violer : graphe dense + grande remoteness → chercher des graphes de n=10..20 nœuds
+    # --- Stratégie 4d : remoteness vs matching/vertex_cover ---
+    # Lollipop : haute remoteness (centre clique) + petit matching (chemin peu dense)
     if "remoteness" in (x, y) and any(v in (x, y) for v in [
         "matching_number", "vertex_cover_number", "independence_number"
     ]):
-        return _best_dense_for_remoteness(conjecture, rng)
+        return _best_lollipop(conjecture, rng)
+
+    # --- Stratégie 4d2 : proximity vs matching/vertex_cover ---
+    # Lollipop : basse proximity (extrémité chemin très éloignée) + petit matching
+    if "proximity" in (x, y) and any(v in (x, y) for v in [
+        "matching_number", "vertex_cover_number"
+    ]):
+        return _best_lollipop(conjecture, rng)
 
     # --- Stratégie 4e : proximity + total_domination ---
     # Essaie dense (K_n : proximity=1, total_dom=2) et sparse (paths)
@@ -267,6 +281,36 @@ def _quick_invariants(G: nx.Graph, x_name: str, y_name: str) -> Optional[dict]:
     return result
 
 
+def _best_lollipop(conjecture, rng: random.Random) -> Optional[nx.Graph]:
+    """
+    Lollipop K_k + path(b) : couvre remoteness/proximity vs matching/vertex_cover/density.
+    - Centre de K_k : très haute closeness → haute remoteness, basse proximity
+    - Extrémité du chemin : très basse closeness → basse proximity
+    - Matching ≈ floor(k/2) + floor(b/2), indépendant du nombre de nœuds
+    """
+    from ..invariants.compute import compute_invariants as _compute_inv
+    best_viol = float("-inf")
+    best_G = None
+    for k in range(3, 11):
+        for b in range(1, 22):
+            G = nx.complete_graph(k)
+            prev = 0
+            for i in range(b):
+                G.add_edge(prev, k + i)
+                prev = k + i
+            try:
+                inv = _compute_inv(G, {conjecture.x_name, conjecture.y_name})
+                viol = conjecture.violation(inv)
+            except Exception:
+                continue
+            if viol > best_viol:
+                best_viol = viol
+                best_G = G.copy()
+                if viol > 1e-9:
+                    return best_G
+    return best_G if best_viol > float("-inf") else None
+
+
 def _best_clique_plus_path(conjecture, rng: random.Random) -> nx.Graph:
     best_viol = float("-inf")
     best_G = None
@@ -344,10 +388,10 @@ def _best_regular_graph(conjecture, rng: random.Random) -> nx.Graph:
     best_viol = float("-inf")
     best_G = None
     for d in range(3, 7):
-        for n in [10, 14, 20, 30, 36, 50, 70]:
+        for n in [10, 14, 20, 24, 28, 30, 36, 50]:
             if n * d % 2 != 0 or d >= n:
                 continue
-            for _ in range(8):
+            for _ in range(4):
                 try:
                     G = nx.random_regular_graph(d, n, seed=rng.randint(0, 2**31))
                     viol = _eval(G, conjecture)
@@ -365,33 +409,61 @@ def _best_regular_graph(conjecture, rng: random.Random) -> nx.Graph:
 
 def _best_barbell_claw_free(conjecture, rng: random.Random) -> nx.Graph:
     """
-    Barbell graph = deux cliques K_k reliées par une arête.
-    Claw_free (cliques complètes), algebraic connectivity ≈ 2/k (très petite pour k grand).
-    Idéal pour les conjectures impliquant second_smallest_laplace_eigenvalue sur claw_free.
-    Utilise compute_invariants directement pour supporter tous les invariants.
+    Barbell étendu = deux cliques K_k reliées par un pont (arête ou chemin).
+    Claw_free (cliques complètes). Algebraic connectivity très petite pour grand k ou long pont.
+    Idéal pour second_smallest_laplace_eigenvalue sur claw_free.
+    Teste d'abord les barbells avec pont-chemin (alg_conn plus petite) puis direct.
     """
     from ..invariants.compute import compute_invariants as _compute_inv
     best_viol = float("-inf")
     best_G = None
-    # largest_distance_eigenvalue est O(n³) sur la matrice des distances → limiter n
     involves_dist = "largest_distance_eigenvalue" in (conjecture.x_name, conjecture.y_name)
-    k_max = 12 if involves_dist else 25
-    for k in range(4, k_max):
+    # Avec pont-chemin : alg_conn beaucoup plus petite → meilleures violations
+    # k=3..7 × bridge=0..5 = 30 combinaisons, enough to cover all cases
+    k_range = range(3, 8)
+    bridge_range = range(0, 6)  # 0 = arête directe, b = b nœuds intermédiaires
+    for k in k_range:
+        for bridge in bridge_range:
+            # Construire K_k – path(bridge) – K_k
+            n_bridge = bridge  # nombre de nœuds intermédiaires
+            offset2 = k + n_bridge  # début de la 2e clique
+            G = nx.complete_graph(k)
+            H = nx.relabel_nodes(nx.complete_graph(k), {v: v + offset2 for v in range(k)})
+            G = nx.compose(G, H)
+            # Pont : 0 → bridge_nodes → offset2
+            prev = 0
+            for i in range(n_bridge):
+                bridge_node = k + i
+                G.add_node(bridge_node)
+                G.add_edge(prev, bridge_node)
+                prev = bridge_node
+            G.add_edge(prev, offset2)
+            try:
+                inv = _compute_inv(G, {conjecture.x_name, conjecture.y_name})
+                viol = conjecture.violation(inv)
+            except Exception:
+                continue
+            if viol > best_viol:
+                best_viol = viol
+                best_G = G.copy()
+                if viol > 1e-9:
+                    return best_G
+    # Fallback : grands barbells directs si rien trouvé ci-dessus
+    k_max = 10 if involves_dist else 20
+    for k in range(8, k_max):
         G = nx.complete_graph(k)
         H = nx.relabel_nodes(nx.complete_graph(k), {v: v + k for v in range(k)})
         G = nx.compose(G, H)
-        G.add_edge(0, k)  # pont entre les deux cliques
+        G.add_edge(0, k)
         try:
             inv = _compute_inv(G, {conjecture.x_name, conjecture.y_name})
             viol = conjecture.violation(inv)
         except Exception:
-            viol = None
-        if viol is None:
             continue
         if viol > best_viol:
             best_viol = viol
             best_G = G.copy()
-            if viol > 1e-9:  # seuil epsilon pour éviter les cas limites flottants
+            if viol > 1e-9:
                 return best_G
     return best_G
 
@@ -593,6 +665,29 @@ def _build_template_graphs() -> List[nx.Graph]:
                 G.remove_edge(i, i + 1)
         if nx.is_connected(G):
             graphs.append(G)
+    # Lollipop K_k + path(b) — bons pour proximity/remoteness vs matching/vertex_cover
+    for k in range(3, 9):
+        for b in range(2, 14):
+            G = nx.complete_graph(k)
+            prev = 0
+            for i in range(b):
+                G.add_edge(prev, k + i)
+                prev = k + i
+            graphs.append(G)
+    # Barbells étendus K_k–path(bridge)–K_k — bons pour algebraic_connectivity (claw_free)
+    for k in range(3, 7):
+        for bridge in range(1, 5):
+            offset2 = k + bridge
+            G = nx.complete_graph(k)
+            H = nx.relabel_nodes(nx.complete_graph(k), {v: v + offset2 for v in range(k)})
+            G = nx.compose(G, H)
+            prev = 0
+            for i in range(bridge):
+                G.add_node(k + i)
+                G.add_edge(prev, k + i)
+                prev = k + i
+            G.add_edge(prev, offset2)
+            graphs.append(G)
     return graphs
 
 
@@ -697,6 +792,34 @@ def _best_triangular_snake_claw_free(conjecture, rng: random.Random) -> Optional
             G.add_edge(path_nodes[i], path_nodes[i + 1])   # arête du chemin
             G.add_edge(path_nodes[i], wing_nodes[i])        # v_i – w_i
             G.add_edge(path_nodes[i + 1], wing_nodes[i])    # v_{i+1} – w_i
+        try:
+            inv = _compute_inv(G, {conjecture.x_name, conjecture.y_name})
+            viol = conjecture.violation(inv)
+        except Exception:
+            continue
+        if viol > best_viol:
+            best_viol = viol
+            best_G = G.copy()
+            if viol > 0:
+                return best_G
+    return best_G if best_viol > float("-inf") else None
+
+
+def _best_clique_with_leaves_claw_free(conjecture, rng: random.Random) -> Optional[nx.Graph]:
+    """
+    K_k avec une feuille pendante par sommet de clique.
+    Propriétés : claw_free ✓ (1 feuille max par sommet), diameter=3, independence=k.
+    Pour independence > 2 + diameter : violation = k - (2+3) = k-5 > 0 pour k>=6.
+    Idéal pour independence_number vs diameter sur claw_free.
+    """
+    from ..invariants.compute import compute_invariants as _compute_inv
+    best_viol = float("-inf")
+    best_G = None
+    for k in range(3, 15):
+        G = nx.complete_graph(k)
+        for i in range(k):
+            G.add_node(k + i)
+            G.add_edge(i, k + i)
         try:
             inv = _compute_inv(G, {conjecture.x_name, conjecture.y_name})
             viol = conjecture.violation(inv)

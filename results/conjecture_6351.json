@@ -11,7 +11,7 @@
   "found": true,
   "time_s": 0.0,
   "best_violation": 0.412255,
-  "best_graph6": ">>graph6<<G{aCC?",
+  "best_graph6": "G{aCC?",
   "invariants": {
     "clique_number": 3.0,
     "maximum_degree": 7.0

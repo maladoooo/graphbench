@@ -9,13 +9,13 @@
   "y_name": "remoteness",
   "sign": ">=",
   "found": true,
-  "time_s": 0.019,
+  "time_s": 0.018,
   "best_violation": 0.002364,
-  "best_graph6": ">>graph6<<L_BI?COE@`GOGG",
+  "best_graph6": "L_BI?COE@`GOGG",
   "invariants": {
     "remoteness": 0.375,
     "radius": 4.0
   },
   "proof": "Conjecture #6013: If G is a connected graph, claw_free, x = radius and y = remoteness, then y(G) >= 279709/161000 - 57877/57960 * x(G) + 12073/48300 * x(G)² - 883/41400 * x(G)³\n  X = radius(G) = 4.0\n  Y = remoteness(G) = 0.375\n  f(X) = 0.377364\n  Violation = 0.002364 > 0  ✓ (contre-exemple valide)",
-  "cost": 0.019
+  "cost": 0.018
 }

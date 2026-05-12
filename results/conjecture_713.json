@@ -8,13 +8,13 @@
   "y_name": "remoteness",
   "sign": ">=",
   "found": true,
-  "time_s": 0.575,
-  "best_violation": 0.002181,
-  "best_graph6": ">>graph6<<SK@_S_?WAGkbcOC?`AB?h?GQP??D?C_C?",
+  "time_s": 0.012,
+  "best_violation": 0.005421,
+  "best_graph6": "O~~~{?@?G?_@?@??_?G?@",
   "invariants": {
-    "density": 0.205263,
-    "remoteness": 0.256757
+    "density": 0.25,
+    "remoteness": 0.306122
   },
-  "proof": "Conjecture #713: If G is a connected graph, x = density and y = remoteness, then y(G) >= - 52151/672841 + 32707/15661 * x(G) - 1003885/407224 * x(G)² + 1327461/986882 * x(G)³\n  X = density(G) = 0.20526315789473684\n  Y = remoteness(G) = 0.25675675675675674\n  f(X) = 0.258937\n  Violation = 0.002181 > 0  ✓ (contre-exemple valide)",
-  "cost": 0.575
+  "proof": "Conjecture #713: If G is a connected graph, x = density and y = remoteness, then y(G) >= - 52151/672841 + 32707/15661 * x(G) - 1003885/407224 * x(G)² + 1327461/986882 * x(G)³\n  X = density(G) = 0.25\n  Y = remoteness(G) = 0.30612244897959184\n  f(X) = 0.311543\n  Violation = 0.005421 > 0  ✓ (contre-exemple valide)",
+  "cost": 0.012
 }
