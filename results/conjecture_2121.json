@@ -9,12 +9,12 @@
   "sign": "<=",
   "found": true,
   "time_s": 0.0,
-  "best_violation": 1.0,
-  "best_graph6": "H?QCR?o",
+  "best_violation": 2.0,
+  "best_graph6": "JCd?Q?@d@C?",
   "invariants": {
-    "matching_number": 4.0,
-    "total_domination_number": 7.0
+    "matching_number": 5.0,
+    "total_domination_number": 9.0
   },
-  "proof": "Conjecture #2121: If G is a connected graph, x = matching_number and y = total_domination_number, then y(G) <= 2 + x(G)\n  X = matching_number(G) = 4.0\n  Y = total_domination_number(G) = 7.0\n  f(X) = 6.000000\n  Violation = 1.000000 > 0  ✓ (contre-exemple valide)",
+  "proof": "Conjecture #2121: If G is a connected graph, x = matching_number and y = total_domination_number, then y(G) <= 2 + x(G)\n  X = matching_number(G) = 5.0\n  Y = total_domination_number(G) = 9.0\n  f(X) = 7.000000\n  Violation = 2.000000 > 0  ✓ (contre-exemple valide)",
   "cost": 0.0
 }

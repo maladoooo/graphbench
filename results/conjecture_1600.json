@@ -12,8 +12,8 @@
   "best_violation": 0.333333,
   "best_graph6": "KhCGGC@?G?_@",
   "invariants": {
-    "total_domination_number": 10.0,
-    "vertex_cover_number": 6.0
+    "vertex_cover_number": 6.0,
+    "total_domination_number": 10.0
   },
   "proof": "Conjecture #1600: If G is a connected graph, x = total_domination_number and y = vertex_cover_number, then y(G) >= - 1/3 + 2/3 * x(G)\n  X = total_domination_number(G) = 10.0\n  Y = vertex_cover_number(G) = 6.0\n  f(X) = 6.333333\n  Violation = 0.333333 > 0  ✓ (contre-exemple valide)",
   "cost": 0.001

@@ -8,7 +8,7 @@
   "y_name": "proximity",
   "sign": ">=",
   "found": true,
-  "time_s": 0.012,
+  "time_s": 0.013,
   "best_violation": 0.011429,
   "best_graph6": "H{CGGC@",
   "invariants": {
@@ -16,5 +16,5 @@
     "independence_number": 4.0
   },
   "proof": "Conjecture #1729: If G is a connected graph, x = independence_number and y = proximity, then y(G) >= 2/5 - 1/25 * x(G)\n  X = independence_number(G) = 4.0\n  Y = proximity(G) = 0.22857142857142856\n  f(X) = 0.240000\n  Violation = 0.011429 > 0  ✓ (contre-exemple valide)",
-  "cost": 0.012
+  "cost": 0.013
 }

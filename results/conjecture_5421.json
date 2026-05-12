@@ -9,7 +9,7 @@
   "y_name": "domination_number",
   "sign": ">=",
   "found": true,
-  "time_s": 0.01,
+  "time_s": 0.009,
   "best_violation": 0.021487,
   "best_graph6": "UhCK?I?@C??__?@?O??G?_??C?C???G?A???@???",
   "invariants": {
@@ -17,5 +17,5 @@
     "domination_number": 3.0
   },
   "proof": "Conjecture #5421: If G is a connected graph, tree, x = remoteness and y = domination_number, then y(G) >= 2448218/179061 - 35078239/654252 * x(G) + 68742285/912389 * x(G)² - 34991613/988898 * x(G)³\n  X = remoteness(G) = 0.3230769230769231\n  Y = domination_number(G) = 3.0\n  f(X) = 3.021487\n  Violation = 0.021487 > 0  ✓ (contre-exemple valide)",
-  "cost": 0.01
+  "cost": 0.009
 }

@@ -12,8 +12,8 @@
   "best_violation": 0.012569,
   "best_graph6": "H~~{?C@",
   "invariants": {
-    "proximity": 0.307692,
-    "density": 0.5
+    "density": 0.5,
+    "proximity": 0.307692
   },
   "proof": "Conjecture #688: If G is a connected graph, x = density and y = proximity, then y(G) >= 98/153 * x(G)\n  X = density(G) = 0.5\n  Y = proximity(G) = 0.3076923076923077\n  f(X) = 0.320261\n  Violation = 0.012569 > 0  ✓ (contre-exemple valide)",
   "cost": 0.002

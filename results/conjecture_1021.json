@@ -8,13 +8,13 @@
   "y_name": "triangle_number",
   "sign": ">=",
   "found": true,
-  "time_s": 0.114,
-  "best_violation": 0.863636,
-  "best_graph6": "JfT\\|i{y~V?",
+  "time_s": 0.077,
+  "best_violation": 0.558824,
+  "best_graph6": "P[CoU[gUmbLCsgHF_b@_Ga?C",
   "invariants": {
-    "average_degree": 6.727273,
-    "triangle_number": 38.0
+    "triangle_number": 14.0,
+    "average_degree": 5.647059
   },
-  "proof": "Conjecture #1021: If G is a connected graph, x = average_degree and y = triangle_number, then y(G) >= - 225/2 + 45/2 * x(G)\n  X = average_degree(G) = 6.7272727272727275\n  Y = triangle_number(G) = 38.0\n  f(X) = 38.863636\n  Violation = 0.863636 > 0  ✓ (contre-exemple valide)",
-  "cost": 0.114
+  "proof": "Conjecture #1021: If G is a connected graph, x = average_degree and y = triangle_number, then y(G) >= - 225/2 + 45/2 * x(G)\n  X = average_degree(G) = 5.647058823529412\n  Y = triangle_number(G) = 14.0\n  f(X) = 14.558824\n  Violation = 0.558824 > 0  ✓ (contre-exemple valide)",
+  "cost": 0.077
 }

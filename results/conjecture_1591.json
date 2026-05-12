@@ -8,13 +8,13 @@
   "y_name": "proximity",
   "sign": ">=",
   "found": true,
-  "time_s": 0.079,
+  "time_s": 0.104,
   "best_violation": 0.00196,
-  "best_graph6": "Lpa?bAH_CQO?_C",
+  "best_graph6": "LpqS_AKGS_O@_?",
   "invariants": {
-    "total_domination_number": 3.0,
-    "proximity": 0.292683
+    "proximity": 0.292683,
+    "total_domination_number": 3.0
   },
   "proof": "Conjecture #1591: If G is a connected graph, x = total_domination_number and y = proximity, then y(G) >= 15/28 - 9/112 * x(G)\n  X = total_domination_number(G) = 3.0\n  Y = proximity(G) = 0.2926829268292683\n  f(X) = 0.294643\n  Violation = 0.001960 > 0  ✓ (contre-exemple valide)",
-  "cost": 0.079
+  "cost": 0.104
 }
