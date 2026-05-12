@@ -13,7 +13,6 @@ from __future__ import annotations
 import random
 import time
 import json
-import io
 import signal
 import sys
 from dataclasses import dataclass, field
@@ -500,14 +499,11 @@ def _search_inner(
 
 
 def _to_graph6(G: Optional[nx.Graph]) -> str:
-    """Convertit G en format graph6."""
+    """Convertit G en format graph6 (sans header >>graph6<<)."""
     if G is None:
         return ""
     try:
-        buf = io.BytesIO()
-        nx.readwrite.write_graph6(G, buf)
-        buf.seek(0)
-        return buf.read().decode("ascii").strip()
+        return nx.to_graph6_bytes(G, header=False).decode("ascii").strip()
     except Exception:
         return ""
 

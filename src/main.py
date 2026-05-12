@@ -111,6 +111,7 @@ def run_batch(
     cache_hits = 0
     slowest_result = None
     fastest_result = None
+    found_times: List[float] = []
 
     for i, conj in enumerate(conjectures, 1):
         print(f"\n[{i}/{len(conjectures)}] Conjecture #{conj.id} ({conj.subgroups})")
@@ -126,6 +127,7 @@ def run_batch(
                 print(f"  ⏭️  Cache (--resume) | {status} | violation={result.best_violation:.4f} | t={result.time_s:.2f}s | coût={result.cost:.1f}")
                 if result.found:
                     found_count += 1
+                    found_times.append(result.time_s)
                     print(f"  graph6: {result.best_graph6}")
                 continue
 
@@ -134,8 +136,8 @@ def run_batch(
         results.append(result)
         total_cost += result.cost
 
-        # Suivi du plus lent et du plus rapide (parmi les trouvés)
         if result.found:
+            found_times.append(result.time_s)
             if slowest_result is None or result.time_s > slowest_result.time_s:
                 slowest_result = result
             if fastest_result is None or result.time_s < fastest_result.time_s:
@@ -152,17 +154,26 @@ def run_batch(
     # Sauvegarde CSV global
     _save_results_csv(results, conjectures, output_csv)
 
+    avg_time = sum(found_times) / len(found_times) if found_times else 0.0
+    mode = "FunSearch (heuristique LLM)" if use_heuristic else "Heuristique simple (Phase 1)"
+
     print(f"\n{'='*60}")
-    print(f"RÉSULTATS FINAUX")
-    print(f"  Conjectures réfutées: {found_count}/{len(conjectures)}")
+    print(f"RÉSULTATS FINAUX — {mode}")
+    print(f"  Conjectures réfutées : {found_count}/{len(conjectures)}")
     if resume and cache_hits:
-        print(f"  Reprise cache: {cache_hits} conjecture(s) non recalculée(s)")
-    print(f"  Score total: {total_cost:.1f}")
+        print(f"  Reprise cache        : {cache_hits} conjecture(s) non recalculée(s)")
+    print(f"  Score total (officiel): {total_cost:.3f}  (somme des ti, 120 si échec)")
+    if found_count > 0:
+        print(f"  Temps moyen (trouvées): {avg_time:.3f}s")
     if slowest_result is not None:
-        print(f"  ⏱️  Plus longue  : #{slowest_result.conjecture_id} ({slowest_result.time_s:.3f}s)")
+        print(f"  Plus longue          : #{slowest_result.conjecture_id} ({slowest_result.time_s:.3f}s)")
     if fastest_result is not None:
-        print(f"  ⚡ Plus courte  : #{fastest_result.conjecture_id} ({fastest_result.time_s:.4f}s)")
-    print(f"  Résultats CSV: {output_csv}")
+        print(f"  Plus rapide          : #{fastest_result.conjecture_id} ({fastest_result.time_s:.4f}s)")
+    if found_count < len(conjectures):
+        missed = [r.conjecture_id for r in results if not r.found]
+        print(f"  Non réfutées         : {missed}")
+    print(f"  Résultats CSV        : {output_csv}")
+    print(f"{'='*60}")
 
 
 def _save_results_csv(
