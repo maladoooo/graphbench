@@ -5,11 +5,13 @@ Chaque ligne = une conjecture.
 from __future__ import annotations
 import ast
 from pathlib import Path
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 import pandas as pd
 
 from .conjecture import Conjecture, parse_coefficients, _parse_fraction
+from ..invariants.compute import SUPPORTED_INVARIANTS
+from ..graphs.classes import SUPPORTED_CLASSES
 
 BENCHMARK_PATH = Path(__file__).parent.parent.parent / "benchmark" / "benchmark.xlsx"
 
@@ -84,6 +86,41 @@ def load_benchmark(
 
     conjectures.sort(key=lambda c: c.id)
     return conjectures
+
+
+def validate_benchmark(conjectures: List[Conjecture]) -> Tuple[List[Conjecture], List[str]]:
+    """
+    Valide une liste de conjectures et filtre celles qu'on ne peut pas traiter.
+
+    Vérifie pour chaque conjecture :
+    - Les invariants X et Y sont implémentés
+    - Toutes les classes de graphes sont supportées
+
+    Retourne :
+        valid   : conjectures traitables
+        warnings: messages d'avertissement pour les conjectures ignorées
+    """
+    valid = []
+    warnings = []
+
+    for c in conjectures:
+        issues = []
+
+        for inv in (c.x_name, c.y_name):
+            if inv not in SUPPORTED_INVARIANTS:
+                issues.append(f"invariant inconnu '{inv}'")
+
+        for cls in c.subgroups:
+            if cls not in SUPPORTED_CLASSES:
+                issues.append(f"classe inconnue '{cls}'")
+
+        if issues:
+            msg = f"  ⚠️  Conjecture #{c.id} ignorée — {', '.join(issues)}"
+            warnings.append(msg)
+        else:
+            valid.append(c)
+
+    return valid, warnings
 
 
 def load_conjecture_by_id(cid: int, path: Path = BENCHMARK_PATH) -> Conjecture:

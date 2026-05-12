@@ -23,7 +23,7 @@ import time
 from pathlib import Path
 from typing import List, Optional
 
-from .benchmark.load_benchmark import load_benchmark, load_conjecture_by_id
+from .benchmark.load_benchmark import load_benchmark, load_conjecture_by_id, validate_benchmark
 from .funsearch.funsearch import FunSearch
 from .benchmark.conjecture import Conjecture
 from .search.search_simple import search, SearchResult
@@ -32,6 +32,22 @@ from .invariants.compute import InvariantNotImplementedError
 
 RESULTS_DIR = Path(__file__).parent.parent / "results"
 RESULTS_DIR.mkdir(exist_ok=True)
+
+
+def _validate_and_warn(conjectures: List[Conjecture]) -> List[Conjecture]:
+    """Valide les conjectures et affiche les avertissements. Retourne les valides."""
+    valid, warnings = validate_benchmark(conjectures)
+    if warnings:
+        print(f"\n{'='*60}")
+        print(f"⚠️  AVERTISSEMENTS — {len(warnings)} conjecture(s) non supportée(s) :")
+        for w in warnings:
+            print(w)
+        print(f"  → Ces conjectures seront ignorées (invariant ou classe inconnue).")
+        print(f"  → Pour les supporter, implémenter les éléments manquants dans :")
+        print(f"     src/invariants/compute.py  (nouveaux invariants)")
+        print(f"     src/graphs/classes.py      (nouvelles classes)")
+        print(f"{'='*60}\n")
+    return valid
 
 
 def run_single(
@@ -261,9 +277,12 @@ def main() -> None:
     if args.id:
         if len(args.id) == 1:
             conj = load_conjecture_by_id(args.id[0])
-            run_single(conj, time_limit=args.time, verbose=args.verbose, use_heuristic=args.heuristic)
+            conjectures = _validate_and_warn([conj])
+            if conjectures:
+                run_single(conjectures[0], time_limit=args.time, verbose=args.verbose, use_heuristic=args.heuristic)
         else:
             conjectures = load_benchmark(ids=args.id)
+            conjectures = _validate_and_warn(conjectures)
             run_batch(
                 conjectures,
                 time_limit=args.time,
@@ -280,6 +299,7 @@ def main() -> None:
         conjectures = load_benchmark(subgroup_filter=subgroup_filter)
         if args.max:
             conjectures = conjectures[:args.max]
+        conjectures = _validate_and_warn(conjectures)
         print(f"FunSearch sur {len(conjectures)} conjectures | {args.funsearch_iter} itérations")
         fs = FunSearch(
             conjectures=conjectures,
@@ -297,6 +317,7 @@ def main() -> None:
         conjectures = load_benchmark(subgroup_filter=subgroup_filter)
         if args.max:
             conjectures = conjectures[:args.max]
+        conjectures = _validate_and_warn(conjectures)
         print(f"Chargement de {len(conjectures)} conjectures.")
         run_batch(
             conjectures,

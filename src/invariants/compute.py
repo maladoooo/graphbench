@@ -10,10 +10,29 @@ import networkx as nx
 import numpy as np
 
 
+SUPPORTED_INVARIANTS: frozenset = frozenset({
+    "order", "size", "density",
+    "diameter", "radius",
+    "minimum_degree", "maximum_degree", "average_degree",
+    "clique_number", "triangle_number",
+    "domination_number", "total_domination_number",
+    "independence_number", "vertex_cover_number", "independent_domination_number",
+    "matching_number",
+    "proximity", "remoteness",
+    "randic_index", "harmonic_index",
+    "first_zagreb_index", "second_zagreb_index",
+    "largest_eigenvalue", "largest_distance_eigenvalue",
+    "second_smallest_laplace_eigenvalue",
+})
+
+
 class InvariantNotImplementedError(NotImplementedError):
     """Levée quand un invariant demandé n'est pas implémenté."""
     def __init__(self, name: str):
-        super().__init__(f"Invariant '{name}' non implémenté.")
+        super().__init__(
+            f"Invariant '{name}' non implémenté. "
+            f"Invariants supportés : {sorted(SUPPORTED_INVARIANTS)}"
+        )
         self.name = name
 
 
