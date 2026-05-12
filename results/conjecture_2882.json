@@ -8,13 +8,13 @@
   "y_name": "independent_domination_number",
   "sign": "<=",
   "found": true,
-  "time_s": 0.002,
-  "best_violation": 0.416667,
-  "best_graph6": ">>graph6<<DHg",
+  "time_s": 0.0,
+  "best_violation": 0.25,
+  "best_graph6": ">>graph6<<EhCG",
   "invariants": {
-    "second_zagreb_index": 14.0,
-    "independent_domination_number": 3.0
+    "independent_domination_number": 3.0,
+    "second_zagreb_index": 16.0
   },
-  "proof": "Conjecture #2882: If G is a connected graph, x = second_zagreb_index and y = independent_domination_number, then y(G) <= 17/12 + 1/12 * x(G)\n  X = second_zagreb_index(G) = 14.0\n  Y = independent_domination_number(G) = 3.0\n  f(X) = 2.583333\n  Violation = 0.416667 > 0  ✓ (contre-exemple valide)",
-  "cost": 0.002
+  "proof": "Conjecture #2882: If G is a connected graph, x = second_zagreb_index and y = independent_domination_number, then y(G) <= 17/12 + 1/12 * x(G)\n  X = second_zagreb_index(G) = 16.0\n  Y = independent_domination_number(G) = 3.0\n  f(X) = 2.750000\n  Violation = 0.250000 > 0  ✓ (contre-exemple valide)",
+  "cost": 0.0
 }

@@ -8,7 +8,7 @@
   "y_name": "average_degree",
   "sign": ">=",
   "found": true,
-  "time_s": 0.001,
+  "time_s": 0.0,
   "best_violation": 0.036364,
   "best_graph6": ">>graph6<<J~aCCA?_C??",
   "invariants": {
@@ -16,5 +16,5 @@
     "average_degree": 2.363636
   },
   "proof": "Conjecture #1178: If G is a connected graph, x = clique_number and y = average_degree, then y(G) >= 3/5 * x(G)\n  X = clique_number(G) = 4.0\n  Y = average_degree(G) = 2.3636363636363638\n  f(X) = 2.400000\n  Violation = 0.036364 > 0  ✓ (contre-exemple valide)",
-  "cost": 0.001
+  "cost": 0.0
 }

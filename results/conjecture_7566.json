@@ -9,13 +9,13 @@
   "y_name": "triangle_number",
   "sign": ">=",
   "found": true,
-  "time_s": 0.006,
+  "time_s": 0.0,
   "best_violation": 0.039808,
   "best_graph6": ">>graph6<<Kz~~zjhx{Bvp",
   "invariants": {
     "largest_eigenvalue": 8.052207,
     "triangle_number": 81.0
   },
-  "proof": "Conjecture #7566: If G is a connected graph, claw_free, x = largest_eigenvalue and y = triangle_number, then y(G) >= - 228237044/940829 + 28042053/697709 * x(G)\n  X = largest_eigenvalue(G) = 8.05220720106022\n  Y = triangle_number(G) = 81.0\n  f(X) = 81.039808\n  Violation = 0.039808 > 0  ✓ (contre-exemple valide)",
-  "cost": 0.006
+  "proof": "Conjecture #7566: If G is a connected graph, claw_free, x = largest_eigenvalue and y = triangle_number, then y(G) >= - 228237044/940829 + 28042053/697709 * x(G)\n  X = largest_eigenvalue(G) = 8.052207201060215\n  Y = triangle_number(G) = 81.0\n  f(X) = 81.039808\n  Violation = 0.039808 > 0  ✓ (contre-exemple valide)",
+  "cost": 0.0
 }

@@ -8,13 +8,13 @@
   "y_name": "vertex_cover_number",
   "sign": ">=",
   "found": true,
-  "time_s": 0.089,
+  "time_s": 0.001,
   "best_violation": 0.333333,
-  "best_graph6": ">>graph6<<Ja?a?C@GOo?",
+  "best_graph6": ">>graph6<<KhCGGC@?G?_@",
   "invariants": {
-    "vertex_cover_number": 4.0,
-    "total_domination_number": 7.0
+    "total_domination_number": 10.0,
+    "vertex_cover_number": 6.0
   },
-  "proof": "Conjecture #1600: If G is a connected graph, x = total_domination_number and y = vertex_cover_number, then y(G) >= - 1/3 + 2/3 * x(G)\n  X = total_domination_number(G) = 7.0\n  Y = vertex_cover_number(G) = 4.0\n  f(X) = 4.333333\n  Violation = 0.333333 > 0  ✓ (contre-exemple valide)",
-  "cost": 0.089
+  "proof": "Conjecture #1600: If G is a connected graph, x = total_domination_number and y = vertex_cover_number, then y(G) >= - 1/3 + 2/3 * x(G)\n  X = total_domination_number(G) = 10.0\n  Y = vertex_cover_number(G) = 6.0\n  f(X) = 6.333333\n  Violation = 0.333333 > 0  ✓ (contre-exemple valide)",
+  "cost": 0.001
 }

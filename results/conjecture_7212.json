@@ -9,13 +9,13 @@
   "y_name": "second_zagreb_index",
   "sign": ">=",
   "found": true,
-  "time_s": 0.001,
-  "best_violation": 38.444444,
-  "best_graph6": ">>graph6<<Jj~~zjhx{B_",
+  "time_s": 0.0,
+  "best_violation": 29.666667,
+  "best_graph6": ">>graph6<<K~~{?CB?wF_^",
   "invariants": {
-    "second_zagreb_index": 2081.0,
-    "first_zagreb_index": 570.0
+    "first_zagreb_index": 322.0,
+    "second_zagreb_index": 836.0
   },
-  "proof": "Conjecture #7212: If G is a connected graph, claw_free, x = first_zagreb_index and y = second_zagreb_index, then y(G) >= - 6860/9 + 91/18 * x(G)\n  X = first_zagreb_index(G) = 570.0\n  Y = second_zagreb_index(G) = 2081.0\n  f(X) = 2119.444444\n  Violation = 38.444444 > 0  ✓ (contre-exemple valide)",
-  "cost": 0.001
+  "proof": "Conjecture #7212: If G is a connected graph, claw_free, x = first_zagreb_index and y = second_zagreb_index, then y(G) >= - 6860/9 + 91/18 * x(G)\n  X = first_zagreb_index(G) = 322.0\n  Y = second_zagreb_index(G) = 836.0\n  f(X) = 865.666667\n  Violation = 29.666667 > 0  ✓ (contre-exemple valide)",
+  "cost": 0.0
 }

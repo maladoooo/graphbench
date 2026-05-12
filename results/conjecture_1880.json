@@ -8,13 +8,13 @@
   "y_name": "independent_domination_number",
   "sign": "<=",
   "found": true,
-  "time_s": 0.038,
-  "best_violation": 4.0,
-  "best_graph6": ">>graph6<<OOC_UWH?OO@GG?G??G?O?",
+  "time_s": 0.006,
+  "best_violation": 2.0,
+  "best_graph6": ">>graph6<<Cs",
   "invariants": {
-    "independent_domination_number": 13.0,
-    "vertex_cover_number": 3.0
+    "vertex_cover_number": 1.0,
+    "independent_domination_number": 3.0
   },
-  "proof": "Conjecture #1880: If G is a connected graph, x = vertex_cover_number and y = independent_domination_number, then y(G) <= - 3 + 4 * x(G)\n  X = vertex_cover_number(G) = 3.0\n  Y = independent_domination_number(G) = 13.0\n  f(X) = 9.000000\n  Violation = 4.000000 > 0  ✓ (contre-exemple valide)",
-  "cost": 0.038
+  "proof": "Conjecture #1880: If G is a connected graph, x = vertex_cover_number and y = independent_domination_number, then y(G) <= - 3 + 4 * x(G)\n  X = vertex_cover_number(G) = 1.0\n  Y = independent_domination_number(G) = 3.0\n  f(X) = 1.000000\n  Violation = 2.000000 > 0  ✓ (contre-exemple valide)",
+  "cost": 0.006
 }

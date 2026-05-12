@@ -52,6 +52,80 @@ class SearchResult:
     cost: float = 120.0                # ti si trouvé, 120 sinon (scoring officiel)
 
 
+# ─── Cache cross-conjectures (apprentissage intra-run) ─────────────────────
+# Beaucoup de conjectures partagent la même signature (subgroups, x, y, sign).
+# Quand on trouve un contre-exemple, on le mémorise — pour les conjectures
+# suivantes ayant la même signature, on vérifie d'abord ce graphe par simple
+# évaluation arithmétique f(x_val) vs y_val (≈ 1 µs au lieu de 0.5-1.5 s).
+_GRAPH_CACHE: Dict[tuple, List[tuple]] = {}
+_CACHE_MAX_PER_KEY = 8
+
+
+def _cache_key(conjecture: Conjecture) -> tuple:
+    return (
+        frozenset(conjecture.subgroups),
+        conjecture.x_name,
+        conjecture.y_name,
+        conjecture.sign,
+    )
+
+
+def _try_cached(conjecture: Conjecture, t_start: float) -> Optional[SearchResult]:
+    """Essaie de réutiliser un graphe déjà trouvé pour une conjecture de même signature.
+    Vérification PURE ARITHMÉTIQUE : f(x_val) comparé à y_val. Pas de recalcul d'invariants.
+    """
+    key = _cache_key(conjecture)
+    cached_list = _GRAPH_CACHE.get(key)
+    if not cached_list:
+        return None
+    for cached_G, x_val, y_val in cached_list:
+        try:
+            fx_val = conjecture.eval_f(x_val)
+        except Exception:
+            continue
+        if conjecture.sign == "<=":
+            viol = y_val - fx_val
+        elif conjecture.sign == ">=":
+            viol = fx_val - y_val
+        else:
+            continue
+        if viol > 1e-9:
+            elapsed = time.perf_counter() - t_start
+            inv = {conjecture.x_name: x_val, conjecture.y_name: y_val}
+            return SearchResult(
+                conjecture_id=conjecture.id,
+                found=True,
+                time_s=elapsed,
+                best_violation=viol,
+                best_graph=cached_G,
+                best_graph6=_to_graph6(cached_G),
+                best_invariants=inv,
+                proof=conjecture.proof_string(inv),
+                cost=elapsed,
+            )
+    return None
+
+
+def _store_in_cache(conjecture: Conjecture, result: SearchResult) -> None:
+    """Mémorise un graphe trouvé pour réutilisation par les conjectures de même signature."""
+    if not result.found or result.best_graph is None:
+        return
+    x_val = result.best_invariants.get(conjecture.x_name)
+    y_val = result.best_invariants.get(conjecture.y_name)
+    if x_val is None or y_val is None:
+        return
+    key = _cache_key(conjecture)
+    lst = _GRAPH_CACHE.setdefault(key, [])
+    # Évite les doublons exacts
+    g_sig = frozenset(result.best_graph.edges())
+    for cached_G, _, _ in lst:
+        if frozenset(cached_G.edges()) == g_sig:
+            return
+    lst.append((result.best_graph.copy(), float(x_val), float(y_val)))
+    if len(lst) > _CACHE_MAX_PER_KEY:
+        lst.pop(0)
+
+
 def search(
     conjecture: Conjecture,
     time_limit: float = 60.0,
@@ -62,6 +136,30 @@ def search(
     heuristic_fn=None,
     verbose: bool = False,
     stagnation_limit: Optional[int] = None,
+) -> SearchResult:
+    """Wrapper avec cache cross-conjectures."""
+    t_start_outer = time.perf_counter()
+    cached = _try_cached(conjecture, t_start_outer)
+    if cached is not None:
+        return cached
+    result = _search_main(
+        conjecture, time_limit, population_size, initial_n,
+        seed, use_heuristic, heuristic_fn, verbose, stagnation_limit,
+    )
+    _store_in_cache(conjecture, result)
+    return result
+
+
+def _search_main(
+    conjecture: Conjecture,
+    time_limit: float,
+    population_size: int,
+    initial_n: int,
+    seed: Optional[int],
+    use_heuristic: bool,
+    heuristic_fn,
+    verbose: bool,
+    stagnation_limit: Optional[int],
 ) -> SearchResult:
     """
     Lance la recherche locale pour réfuter la conjecture.

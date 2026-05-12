@@ -8,13 +8,13 @@
   "y_name": "total_domination_number",
   "sign": ">=",
   "found": true,
-  "time_s": 0.112,
-  "best_violation": 0.037037,
-  "best_graph6": ">>graph6<<NoEU?I__TDOM_O_C_o?",
+  "time_s": 0.106,
+  "best_violation": 0.02439,
+  "best_graph6": ">>graph6<<LpqS_AKGS_O@_?",
   "invariants": {
-    "proximity": 0.291667,
-    "total_domination_number": 3.0
+    "total_domination_number": 3.0,
+    "proximity": 0.292683
   },
-  "proof": "Conjecture #3144: If G is a connected graph, x = proximity and y = total_domination_number, then y(G) >= 20/3 - 112/9 * x(G)\n  X = proximity(G) = 0.2916666666666667\n  Y = total_domination_number(G) = 3.0\n  f(X) = 3.037037\n  Violation = 0.037037 > 0  ✓ (contre-exemple valide)",
-  "cost": 0.112
+  "proof": "Conjecture #3144: If G is a connected graph, x = proximity and y = total_domination_number, then y(G) >= 20/3 - 112/9 * x(G)\n  X = proximity(G) = 0.2926829268292683\n  Y = total_domination_number(G) = 3.0\n  f(X) = 3.024390\n  Violation = 0.024390 > 0  ✓ (contre-exemple valide)",
+  "cost": 0.106
 }

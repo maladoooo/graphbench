@@ -8,13 +8,13 @@
   "y_name": "total_domination_number",
   "sign": "<=",
   "found": true,
-  "time_s": 0.517,
-  "best_violation": 0.5,
-  "best_graph6": ">>graph6<<NW_??c?A?GSO?AGA?E?",
+  "time_s": 0.037,
+  "best_violation": 1.0,
+  "best_graph6": ">>graph6<<JCd?Q?@d@C?",
   "invariants": {
-    "total_domination_number": 10.0,
-    "matching_number": 6.0
+    "total_domination_number": 9.0,
+    "matching_number": 5.0
   },
-  "proof": "Conjecture #2120: If G is a connected graph, x = matching_number and y = total_domination_number, then y(G) <= 1/2 + 3/2 * x(G)\n  X = matching_number(G) = 6.0\n  Y = total_domination_number(G) = 10.0\n  f(X) = 9.500000\n  Violation = 0.500000 > 0  ✓ (contre-exemple valide)",
-  "cost": 0.517
+  "proof": "Conjecture #2120: If G is a connected graph, x = matching_number and y = total_domination_number, then y(G) <= 1/2 + 3/2 * x(G)\n  X = matching_number(G) = 5.0\n  Y = total_domination_number(G) = 9.0\n  f(X) = 8.000000\n  Violation = 1.000000 > 0  ✓ (contre-exemple valide)",
+  "cost": 0.037
 }

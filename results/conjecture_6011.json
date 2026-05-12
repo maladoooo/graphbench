@@ -9,13 +9,13 @@
   "y_name": "remoteness",
   "sign": ">=",
   "found": true,
-  "time_s": 0.025,
+  "time_s": 0.032,
   "best_violation": 0.012121,
   "best_graph6": ">>graph6<<JhCGKB?EcB?",
   "invariants": {
-    "radius": 3.0,
-    "remoteness": 0.454545
+    "remoteness": 0.454545,
+    "radius": 3.0
   },
   "proof": "Conjecture #6011: If G is a connected graph, claw_free, x = radius and y = remoteness, then y(G) >= 239/345 - 26/345 * x(G)\n  X = radius(G) = 3.0\n  Y = remoteness(G) = 0.45454545454545453\n  f(X) = 0.466667\n  Violation = 0.012121 > 0  ✓ (contre-exemple valide)",
-  "cost": 0.025
+  "cost": 0.032
 }

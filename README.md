@@ -88,6 +88,24 @@ Avant la recherche locale, `generate_smart()` tente de construire directement un
 
 Chaque conjecture est attaquée avec 6 graines différentes (42, 7, 13, 43, 49, 55) en allouant le temps équitablement. Cela permet d'explorer des régions différentes de l'espace de recherche.
 
+### Batterie universelle de templates
+
+Pour les conjectures sans route spécifique, on évalue ~40 **graphes standards** de la théorie : cliques K_n, chemins P_n, cycles C_n, étoiles, bipartis complets K_{a,b}, barbells K_k–e–K_k, triangular snakes, Petersen, Desargues, Heawood, roues, K_n moins un couplage.
+
+**Cache à deux niveaux** :
+- Les invariants de chaque template sont calculés une seule fois (lazy) et mis en cache par paire (template_idx, invariant_name).
+- L'appartenance à une classe (claw_free, tree, etc.) est aussi cachée.
+
+Première conjecture utilisant `(density, λ₂)` : ~30 ms (calcul des 40 invariants). Conjectures suivantes utilisant ces invariants : ~150 µs (arithmétique pure).
+
+### Cache cross-conjectures (apprentissage intra-run)
+
+Plusieurs conjectures du benchmark partagent la même **signature d'invariants** `(subgroups, x_name, y_name, sign)` et peuvent être réfutées par le même graphe (mais avec des coefficients `f(x)` différents).
+
+Quand un contre-exemple est trouvé, son graphe et les valeurs `(x_value, y_value)` sont stockées en mémoire. Pour une conjecture suivante de même signature, on évalue d'abord `f(x_value)` et on compare à `y_value` — **vérification arithmétique pure** en ~1 µs, sans recalcul d'invariants ni recherche locale.
+
+Aucun ID de conjecture n'est utilisé : c'est de l'apprentissage purement structurel intra-run.
+
 ### Invariant critique : connectivité algébrique
 
 `nx.algebraic_connectivity()` (ARPACK) diverge sur les graphes barbell (λ₂ ≈ 0). Le calcul est remplacé par `numpy.linalg.eigvalsh(laplacian_matrix)`, déterministe et fiable.
@@ -109,10 +127,11 @@ return (
 | Métrique | Valeur |
 |---|---|
 | Conjectures réfutées | **100 / 100** |
-| Score total | **7.2** |
-| Temps moyen de réfutation | **0.07 s** |
-| Temps maximum | **1.17 s** |
+| Score total | **≈ 3–4 s** (objectif < 2 s) |
+| Temps moyen de réfutation | **< 0.05 s** |
 | Classes couvertes | connected, claw-free, tree |
+
+Le résumé final affiche maintenant la conjecture la plus longue et la plus rapide à trouver.
 
 ## Dépendances
 

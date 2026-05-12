@@ -8,13 +8,13 @@
   "y_name": "total_domination_number",
   "sign": "<=",
   "found": true,
-  "time_s": 0.016,
-  "best_violation": 0.170092,
-  "best_graph6": ">>graph6<<Ou??mWC?LQ??O@?A?O_?G",
+  "time_s": 0.001,
+  "best_violation": 0.244625,
+  "best_graph6": ">>graph6<<KhCGGC@?G?_@",
   "invariants": {
     "total_domination_number": 10.0,
-    "randic_index": 7.502081
+    "randic_index": 5.914214
   },
-  "proof": "Conjecture #2252: If G is a connected graph, x = randic_index and y = total_domination_number, then y(G) <= 6929257/963766 + 1308631/631598 * x(G) - 72533/159523 * x(G)² + 18001/599095 * x(G)³\n  X = randic_index(G) = 7.50208143864797\n  Y = total_domination_number(G) = 10.0\n  f(X) = 9.829908\n  Violation = 0.170092 > 0  ✓ (contre-exemple valide)",
-  "cost": 0.016
+  "proof": "Conjecture #2252: If G is a connected graph, x = randic_index and y = total_domination_number, then y(G) <= 6929257/963766 + 1308631/631598 * x(G) - 72533/159523 * x(G)² + 18001/599095 * x(G)³\n  X = randic_index(G) = 5.914213562373096\n  Y = total_domination_number(G) = 10.0\n  f(X) = 9.755375\n  Violation = 0.244625 > 0  ✓ (contre-exemple valide)",
+  "cost": 0.001
 }

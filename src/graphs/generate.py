@@ -50,6 +50,11 @@ def generate_smart(
     if "density" in (x, y) and "proximity" in (x, y):
         return _best_clique_plus_path(conjecture, rng)
 
+    # --- Stratégie 3b : density vs remoteness ---
+    # Même structure que density+proximity (clique+chemin)
+    if "density" in (x, y) and "remoteness" in (x, y):
+        return _best_clique_plus_path(conjecture, rng)
+
     # --- Stratégie 4 : second_smallest_laplace_eigenvalue vs n'importe quoi ---
     # Pour claw_free : barbell (deux cliques reliées par un pont) → alg_conn très petite
     # Pour autres graphes : deux cliques reliées par un pont
@@ -65,9 +70,14 @@ def generate_smart(
             return _best_barbell_claw_free(conjecture, rng)
         return _best_two_cliques(conjecture, rng)
 
-    # --- Stratégie 4b : radius dans graphe claw_free ---
-    # Cycles C_k : naturellement claw_free, radius = k//2, domination/independence contrôlables
-    if "radius" in (x, y) and "claw_free" in conjecture.subgroups:
+    # --- Stratégie 4b : independence + radius dans graphe claw_free → triangular snake ---
+    # Triangular snake : k triangles en chaîne → claw_free, radius = k//2, independence = k
+    if "independence_number" in (x, y) and "radius" in (x, y) and "claw_free" in conjecture.subgroups:
+        return _best_triangular_snake_claw_free(conjecture, rng)
+
+    # --- Stratégie 4c : radius OU diameter dans graphe claw_free → cycles ---
+    # Cycles C_k : naturellement claw_free, radius = k//2, diameter = k//2
+    if ("radius" in (x, y) or "diameter" in (x, y)) and "claw_free" in conjecture.subgroups:
         return _best_cycle_claw_free(conjecture, rng)
 
     # --- Stratégie 4c : remoteness dans un arbre ---
@@ -82,9 +92,19 @@ def generate_smart(
     ]):
         return _best_dense_for_remoteness(conjecture, rng)
 
+    # --- Stratégie 4e : proximity + total_domination ---
+    # Essaie dense (K_n : proximity=1, total_dom=2) et sparse (paths)
+    if "proximity" in (x, y) and "total_domination_number" in (x, y):
+        return _best_for_proximity_total_dom(conjecture, rng)
+
     # --- Stratégie 5 : independence_number vs total_domination_number ---
     if "independence_number" in (x, y) and "total_domination_number" in (x, y):
         return _star_graph(rng)
+
+    # --- Stratégie 5b : matching_number vs total_domination_number ---
+    # Essaie des graphes de densité variée
+    if "matching_number" in (x, y) and "total_domination_number" in (x, y):
+        return _best_sparse_for_matching_dom(conjecture, rng)
 
     # --- Stratégie 6 : triangle_number vs maximum_degree ---
     # Pour violer : graphes d-réguliers avec beaucoup de triangles et d petit
@@ -95,8 +115,11 @@ def generate_smart(
     if "triangle_number" in (x, y):
         return _best_clique_plus_leaves(conjecture, rng)
 
-    # Pas de stratégie connue
-    return None
+    # --- Dernier recours : batterie universelle de templates ---
+    # Tente ~40 graphes standards (K_n, P_n, C_n, étoiles, bipartis, barbells,
+    # triangular snakes, Petersen). Les invariants sont mis en cache au premier
+    # appel : les conjectures suivantes ne font que de l'arithmétique pure.
+    return _try_universal_templates(conjecture)
 
 
 def _eval(G: nx.Graph, conjecture) -> Optional[float]:
@@ -165,7 +188,10 @@ def _quick_invariants(G: nx.Graph, x_name: str, y_name: str) -> Optional[dict]:
                 result[name] = 0.0
         elif name == "second_smallest_laplace_eigenvalue":
             if nx.is_connected(G) and n > 1:
-                result[name] = float(nx.algebraic_connectivity(G))
+                import numpy as _np
+                _L = nx.laplacian_matrix(G).toarray().astype(float)
+                _ev = _np.linalg.eigvalsh(_L)
+                result[name] = float(sorted(_ev)[1])
             else:
                 result[name] = 0.0
         elif name == "independence_number":
@@ -347,7 +373,10 @@ def _best_barbell_claw_free(conjecture, rng: random.Random) -> nx.Graph:
     from ..invariants.compute import compute_invariants as _compute_inv
     best_viol = float("-inf")
     best_G = None
-    for k in range(4, 25):
+    # largest_distance_eigenvalue est O(n³) sur la matrice des distances → limiter n
+    involves_dist = "largest_distance_eigenvalue" in (conjecture.x_name, conjecture.y_name)
+    k_max = 12 if involves_dist else 25
+    for k in range(4, k_max):
         G = nx.complete_graph(k)
         H = nx.relabel_nodes(nx.complete_graph(k), {v: v + k for v in range(k)})
         G = nx.compose(G, H)
@@ -403,8 +432,8 @@ def _best_dense_for_remoteness(conjecture, rng: random.Random) -> Optional[nx.Gr
     from ..invariants.compute import compute_invariants as _compute_inv
     best_viol = float("-inf")
     best_G = None
-    for n in range(10, 21):
-        for trial in range(5):
+    for n in range(12, 19):
+        for trial in range(2):
             # Essayer différents types : aléatoires, lollipop, etc.
             if trial == 0:
                 # Graphe complet moins quelques arêtes
@@ -419,8 +448,8 @@ def _best_dense_for_remoteness(conjecture, rng: random.Random) -> Optional[nx.Gr
                             G.add_edge(*e)
                             edges.append(e)
             else:
-                # Graphe aléatoire avec densité variée
-                p = 0.3 + trial * 0.1
+                # Graphe aléatoire avec densité modérée
+                p = 0.5
                 seed_trial = rng.randint(0, 2**31)
                 G = nx.gnp_random_graph(n, p, seed=seed_trial)
                 if not nx.is_connected(G) or G.number_of_edges() == 0:
@@ -498,6 +527,250 @@ def _best_dense_minus_matching(conjecture, rng: random.Random) -> nx.Graph:
                 if viol > 0:
                     return best_G
     return best_G
+
+
+# ─── Batterie de templates universels (avec cache d'invariants) ──────────────
+# Liste construite à la demande pour éviter le coût de génération à l'import.
+_TEMPLATE_GRAPHS: Optional[List[nx.Graph]] = None
+_TEMPLATE_INV: dict = {}        # (template_idx, inv_name) -> float
+_TEMPLATE_CLASS: dict = {}      # (template_idx, frozenset(subgroups)) -> bool
+
+
+def _build_template_graphs() -> List[nx.Graph]:
+    """Construit la liste des graphes templates (graphes standards de la théorie)."""
+    graphs: List[nx.Graph] = []
+    # Cliques K_n
+    for n in [4, 5, 6, 8, 10, 12, 15, 18]:
+        graphs.append(nx.complete_graph(n))
+    # Chemins P_n
+    for n in [4, 6, 8, 10, 12, 15, 20, 25]:
+        graphs.append(nx.path_graph(n))
+    # Cycles C_n
+    for n in [4, 5, 6, 7, 8, 10, 12, 15, 20]:
+        graphs.append(nx.cycle_graph(n))
+    # Étoiles K_{1,n}
+    for n in [3, 5, 8, 12]:
+        graphs.append(nx.star_graph(n))
+    # Bipartis complets K_{a,b}
+    for a, b in [(2, 3), (2, 5), (3, 4), (3, 6), (4, 5), (4, 7), (5, 8)]:
+        graphs.append(nx.complete_bipartite_graph(a, b))
+    # Barbells K_k–e–K_k
+    for k in [3, 4, 5, 6, 7, 8]:
+        G = nx.complete_graph(k)
+        H = nx.relabel_nodes(nx.complete_graph(k), {v: v + k for v in range(k)})
+        G = nx.compose(G, H)
+        G.add_edge(0, k)
+        graphs.append(G)
+    # Triangular snakes (k triangles en chaîne)
+    for k in [3, 4, 5, 6, 7]:
+        G = nx.Graph()
+        for i in range(k):
+            G.add_edge(i, i + 1)
+            G.add_edge(i, k + 1 + i)
+            G.add_edge(i + 1, k + 1 + i)
+        graphs.append(G)
+    # Graphes nommés
+    try:
+        graphs.append(nx.petersen_graph())
+    except Exception:
+        pass
+    try:
+        graphs.append(nx.desargues_graph())
+    except Exception:
+        pass
+    try:
+        graphs.append(nx.heawood_graph())
+    except Exception:
+        pass
+    # Roues W_n
+    for n in [4, 5, 7, 10]:
+        graphs.append(nx.wheel_graph(n))
+    # K_n moins un couplage parfait (~cocktail party)
+    for n in [6, 8, 10]:
+        G = nx.complete_graph(n)
+        for i in range(0, n - 1, 2):
+            if G.has_edge(i, i + 1):
+                G.remove_edge(i, i + 1)
+        if nx.is_connected(G):
+            graphs.append(G)
+    return graphs
+
+
+def _get_template_graphs() -> List[nx.Graph]:
+    global _TEMPLATE_GRAPHS
+    if _TEMPLATE_GRAPHS is None:
+        _TEMPLATE_GRAPHS = _build_template_graphs()
+    return _TEMPLATE_GRAPHS
+
+
+def _template_in_class(idx: int, subgroups: List[str]) -> bool:
+    """Cache booléen : ce template respecte-t-il la classe demandée ?"""
+    key = (idx, frozenset(subgroups))
+    cached = _TEMPLATE_CLASS.get(key)
+    if cached is not None:
+        return cached
+    from .classes import check_graph_class
+    G = _get_template_graphs()[idx]
+    ok = check_graph_class(G, subgroups)
+    _TEMPLATE_CLASS[key] = ok
+    return ok
+
+
+def _template_invariant(idx: int, name: str) -> Optional[float]:
+    """Cache de valeurs d'invariants par template (calcul une fois par paire)."""
+    key = (idx, name)
+    if key in _TEMPLATE_INV:
+        return _TEMPLATE_INV[key]
+    from ..invariants.compute import compute_invariant, InvariantNotImplementedError
+    G = _get_template_graphs()[idx]
+    try:
+        val = float(compute_invariant(G, name))
+        # Filtrer les valeurs problématiques (infini, NaN)
+        if val != val or val == float("inf") or val == float("-inf"):
+            val = None
+    except (InvariantNotImplementedError, Exception):
+        val = None
+    _TEMPLATE_INV[key] = val
+    return val
+
+
+def _try_universal_templates(conjecture) -> Optional[nx.Graph]:
+    """
+    Batterie de graphes templates avec cache d'invariants.
+    Premier appel pour (x_name, y_name) : ~30 ms (calcul invariants sur ~40 templates).
+    Appels suivants : ~150 µs (pure arithmétique via cache).
+    """
+    templates = _get_template_graphs()
+    sg = conjecture.subgroups
+    x_name = conjecture.x_name
+    y_name = conjecture.y_name
+
+    best_viol = float("-inf")
+    best_G = None
+    for idx in range(len(templates)):
+        # Filtre de classe (mis en cache)
+        if not _template_in_class(idx, sg):
+            continue
+        x_val = _template_invariant(idx, x_name)
+        y_val = _template_invariant(idx, y_name)
+        if x_val is None or y_val is None:
+            continue
+        # Vérification arithmétique de la violation
+        try:
+            fx_val = conjecture.eval_f(x_val)
+        except Exception:
+            continue
+        if conjecture.sign == "<=":
+            viol = y_val - fx_val
+        elif conjecture.sign == ">=":
+            viol = fx_val - y_val
+        else:
+            continue
+        if viol > best_viol:
+            best_viol = viol
+            best_G = templates[idx]
+            if viol > 1e-9:
+                return best_G
+    return best_G if best_viol > float("-inf") else None
+
+
+def _best_triangular_snake_claw_free(conjecture, rng: random.Random) -> Optional[nx.Graph]:
+    """
+    Triangular snake = chaîne de k triangles partageant une arête consécutive.
+    Propriétés : claw_free ✓, radius = k//2, independence = k (les k sommets "wing").
+    Idéal pour independence_number vs radius sur claw_free.
+
+    Structure (k=6, 13 sommets) :
+      v0-v1-v2-v3-v4-v5-v6 (chemin)
+      wi adjacent à vi et v(i+1) pour i=0..5
+    """
+    from ..invariants.compute import compute_invariants as _compute_inv
+    best_viol = float("-inf")
+    best_G = None
+    for k in range(3, 20):
+        # Construire le triangular snake avec k triangles
+        G = nx.Graph()
+        # Sommets : v_0..v_k (chemin) + w_0..w_{k-1} (un par triangle)
+        path_nodes = list(range(k + 1))
+        wing_nodes = list(range(k + 1, 2 * k + 1))
+        for i in range(k):
+            G.add_edge(path_nodes[i], path_nodes[i + 1])   # arête du chemin
+            G.add_edge(path_nodes[i], wing_nodes[i])        # v_i – w_i
+            G.add_edge(path_nodes[i + 1], wing_nodes[i])    # v_{i+1} – w_i
+        try:
+            inv = _compute_inv(G, {conjecture.x_name, conjecture.y_name})
+            viol = conjecture.violation(inv)
+        except Exception:
+            continue
+        if viol > best_viol:
+            best_viol = viol
+            best_G = G.copy()
+            if viol > 0:
+                return best_G
+    return best_G if best_viol > float("-inf") else None
+
+
+def _best_for_proximity_total_dom(conjecture, rng: random.Random) -> Optional[nx.Graph]:
+    """
+    Pour proximity + total_domination_number.
+    Essaie des graphes denses (K_n : proximity=1, total_dom=2) ET des chemins
+    (P_n : proximity basse, total_dom≈n/3).
+    """
+    best_viol = float("-inf")
+    best_G = None
+    # Graphes denses : K_n
+    for n in range(4, 20):
+        G = nx.complete_graph(n)
+        viol = _eval(G, conjecture)
+        if viol is not None and viol > best_viol:
+            best_viol = viol
+            best_G = G.copy()
+            if viol > 0:
+                return best_G
+    # Chemins : P_n (faible proximity, fort total_dom approx)
+    for n in range(6, 30):
+        G = nx.path_graph(n)
+        viol = _eval(G, conjecture)
+        if viol is not None and viol > best_viol:
+            best_viol = viol
+            best_G = G.copy()
+            if viol > 0:
+                return best_G
+    return best_G if best_viol > float("-inf") else None
+
+
+def _best_sparse_for_matching_dom(conjecture, rng: random.Random) -> Optional[nx.Graph]:
+    """
+    Pour matching_number + total_domination_number.
+    Essaie des graphes connexes aléatoires de densité variée (n=10..20, p=0.2..0.4).
+    """
+    from ..invariants.compute import compute_invariants as _compute_inv
+    best_viol = float("-inf")
+    best_G = None
+    for n in range(10, 22):
+        for trial in range(4):
+            p = 0.20 + trial * 0.06
+            G = nx.gnp_random_graph(n, p, seed=rng.randint(0, 2**31))
+            if not nx.is_connected(G):
+                # Connecter les composantes
+                comps = list(nx.connected_components(G))
+                for ci in range(len(comps) - 1):
+                    u = next(iter(comps[ci]))
+                    v = next(iter(comps[ci + 1]))
+                    G.add_edge(u, v)
+            if G.number_of_edges() == 0:
+                continue
+            try:
+                inv = _compute_inv(G, {conjecture.x_name, conjecture.y_name})
+                viol = conjecture.violation(inv)
+            except Exception:
+                continue
+            if viol > best_viol:
+                best_viol = viol
+                best_G = G.copy()
+                if viol > 1e-9:
+                    return best_G
+    return best_G if best_viol > float("-inf") else None
 
 
 def generate_initial_graph(

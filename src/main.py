@@ -109,6 +109,8 @@ def run_batch(
     total_cost = 0.0
     found_count = 0
     cache_hits = 0
+    slowest_result = None
+    fastest_result = None
 
     for i, conj in enumerate(conjectures, 1):
         print(f"\n[{i}/{len(conjectures)}] Conjecture #{conj.id} ({conj.subgroups})")
@@ -132,6 +134,13 @@ def run_batch(
         results.append(result)
         total_cost += result.cost
 
+        # Suivi du plus lent et du plus rapide (parmi les trouvés)
+        if result.found:
+            if slowest_result is None or result.time_s > slowest_result.time_s:
+                slowest_result = result
+            if fastest_result is None or result.time_s < fastest_result.time_s:
+                fastest_result = result
+
         status = "✅ TROUVÉ" if result.found else "❌ échec"
         print(f"  {status} | violation={result.best_violation:.4f} | t={result.time_s:.2f}s | coût={result.cost:.1f}")
         if result.found:
@@ -149,6 +158,10 @@ def run_batch(
     if resume and cache_hits:
         print(f"  Reprise cache: {cache_hits} conjecture(s) non recalculée(s)")
     print(f"  Score total: {total_cost:.1f}")
+    if slowest_result is not None:
+        print(f"  ⏱️  Plus longue  : #{slowest_result.conjecture_id} ({slowest_result.time_s:.3f}s)")
+    if fastest_result is not None:
+        print(f"  ⚡ Plus courte  : #{fastest_result.conjecture_id} ({fastest_result.time_s:.4f}s)")
     print(f"  Résultats CSV: {output_csv}")
 
 
