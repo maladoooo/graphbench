@@ -10,10 +10,10 @@
   "found": true,
   "time_s": 0.002,
   "best_violation": 0.068182,
-  "best_graph6": ">>graph6<<J~aCCA?_C??",
+  "best_graph6": "J~aCCA?_C??",
   "invariants": {
-    "clique_number": 4.0,
-    "average_degree": 2.363636
+    "average_degree": 2.363636,
+    "clique_number": 4.0
   },
   "proof": "Conjecture #980: If G is a connected graph, x = average_degree and y = clique_number, then y(G) <= - 1/2 + 15/8 * x(G)\n  X = average_degree(G) = 2.3636363636363638\n  Y = clique_number(G) = 4.0\n  f(X) = 3.931818\n  Violation = 0.068182 > 0  ✓ (contre-exemple valide)",
   "cost": 0.002

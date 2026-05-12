@@ -8,13 +8,13 @@
   "y_name": "independence_number",
   "sign": ">=",
   "found": true,
-  "time_s": 0.017,
+  "time_s": 0.005,
   "best_violation": 1.0,
-  "best_graph6": ">>graph6<<Gpo?YK",
+  "best_graph6": "F_q`_",
   "invariants": {
     "total_domination_number": 5.0,
     "independence_number": 3.0
   },
   "proof": "Conjecture #1566: If G is a connected graph, x = total_domination_number and y = independence_number, then y(G) >= - 1 + x(G)\n  X = total_domination_number(G) = 5.0\n  Y = independence_number(G) = 3.0\n  f(X) = 4.000000\n  Violation = 1.000000 > 0  ✓ (contre-exemple valide)",
-  "cost": 0.017
+  "cost": 0.005
 }

@@ -10,7 +10,7 @@
   "found": true,
   "time_s": 0.005,
   "best_violation": 0.498112,
-  "best_graph6": ">>graph6<<W~~~~~~~~~~~_???_?W?F??{?Bw?Fw?F{?B~??~w?F~_?^~",
+  "best_graph6": "W~~~~~~~~~~~_???_?W?F??{?Bw?Fw?F{?B~??~w?F~_?^~",
   "invariants": {
     "second_smallest_laplace_eigenvalue": 0.144345,
     "average_degree": 11.083333

@@ -11,7 +11,7 @@
   "found": true,
   "time_s": 0.0,
   "best_violation": 6.0,
-  "best_graph6": ">>graph6<<IsaCCA?_?",
+  "best_graph6": "IsaCCA?_?",
   "invariants": {
     "total_domination_number": 2.0,
     "independence_number": 9.0

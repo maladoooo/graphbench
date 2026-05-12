@@ -11,10 +11,10 @@
   "found": true,
   "time_s": 0.001,
   "best_violation": 0.201,
-  "best_graph6": ">>graph6<<LySOgGD?OA_A?D",
+  "best_graph6": "LySOgGD?OA_A?D",
   "invariants": {
-    "independence_number": 6.0,
-    "radius": 3.0
+    "radius": 3.0,
+    "independence_number": 6.0
   },
   "proof": "Conjecture #5998: If G is a connected graph, claw_free, x = radius and y = independence_number, then y(G) <= - 19407/7000 + 115/14 * x(G) - 71/28 * x(G)² + 1/4 * x(G)³\n  X = radius(G) = 3.0\n  Y = independence_number(G) = 6.0\n  f(X) = 5.799000\n  Violation = 0.201000 > 0  ✓ (contre-exemple valide)",
   "cost": 0.001

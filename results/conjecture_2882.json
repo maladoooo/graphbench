@@ -10,7 +10,7 @@
   "found": true,
   "time_s": 0.0,
   "best_violation": 0.25,
-  "best_graph6": ">>graph6<<EhCG",
+  "best_graph6": "EhCG",
   "invariants": {
     "independent_domination_number": 3.0,
     "second_zagreb_index": 16.0

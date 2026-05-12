@@ -11,7 +11,7 @@
   "found": true,
   "time_s": 0.0,
   "best_violation": 29.666667,
-  "best_graph6": ">>graph6<<K~~{?CB?wF_^",
+  "best_graph6": "K~~{?CB?wF_^",
   "invariants": {
     "first_zagreb_index": 322.0,
     "second_zagreb_index": 836.0

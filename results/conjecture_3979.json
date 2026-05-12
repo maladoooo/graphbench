@@ -10,10 +10,10 @@
   "found": true,
   "time_s": 0.002,
   "best_violation": 0.059852,
-  "best_graph6": ">>graph6<<M~~~{?@?WB_N?^?^_",
+  "best_graph6": "M~~~{?@?WB_N?^?^_",
   "invariants": {
-    "independence_number": 2.0,
-    "second_smallest_laplace_eigenvalue": 0.227998
+    "second_smallest_laplace_eigenvalue": 0.227998,
+    "independence_number": 2.0
   },
   "proof": "Conjecture #3979: If G is a connected graph, x = second_smallest_laplace_eigenvalue and y = independence_number, then y(G) >= 6851575/950028 - 19192437/849328 * x(G)\n  X = second_smallest_laplace_eigenvalue(G) = 0.22799812734123487\n  Y = independence_number(G) = 2.0\n  f(X) = 2.059852\n  Violation = 0.059852 > 0  ✓ (contre-exemple valide)",
   "cost": 0.002

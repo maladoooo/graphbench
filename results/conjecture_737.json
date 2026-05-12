@@ -8,13 +8,13 @@
   "y_name": "second_smallest_laplace_eigenvalue",
   "sign": ">=",
   "found": true,
-  "time_s": 0.081,
+  "time_s": 0.101,
   "best_violation": 0.025696,
-  "best_graph6": ">>graph6<<K~~{?CB?wF_^",
+  "best_graph6": "K~~{?CB?wF_^",
   "invariants": {
-    "density": 0.469697,
-    "second_smallest_laplace_eigenvalue": 0.258343
+    "second_smallest_laplace_eigenvalue": 0.258343,
+    "density": 0.469697
   },
   "proof": "Conjecture #737: If G is a connected graph, x = density and y = second_smallest_laplace_eigenvalue, then y(G) >= - 140492/481757 + 768435/626984 * x(G)\n  X = density(G) = 0.4696969696969697\n  Y = second_smallest_laplace_eigenvalue(G) = 0.25834261322605834\n  f(X) = 0.284039\n  Violation = 0.025696 > 0  ✓ (contre-exemple valide)",
-  "cost": 0.081
+  "cost": 0.101
 }

@@ -9,13 +9,13 @@
   "y_name": "total_domination_number",
   "sign": ">=",
   "found": true,
-  "time_s": 0.001,
-  "best_violation": 0.54851,
-  "best_graph6": ">>graph6<<K~~{?CB?wF_^",
+  "time_s": 0.002,
+  "best_violation": 0.109625,
+  "best_graph6": "I~?GW]?AG",
   "invariants": {
-    "total_domination_number": 2.0,
-    "second_smallest_laplace_eigenvalue": 0.258343
+    "second_smallest_laplace_eigenvalue": 0.144227,
+    "total_domination_number": 4.0
   },
-  "proof": "Conjecture #7753: If G is a connected graph, claw_free, x = second_smallest_laplace_eigenvalue and y = total_domination_number, then y(G) >= 2527817/415576 - 5304461/387748 * x(G)\n  X = second_smallest_laplace_eigenvalue(G) = 0.25834261322605834\n  Y = total_domination_number(G) = 2.0\n  f(X) = 2.548510\n  Violation = 0.548510 > 0  ✓ (contre-exemple valide)",
-  "cost": 0.001
+  "proof": "Conjecture #7753: If G is a connected graph, claw_free, x = second_smallest_laplace_eigenvalue and y = total_domination_number, then y(G) >= 2527817/415576 - 5304461/387748 * x(G)\n  X = second_smallest_laplace_eigenvalue(G) = 0.14422749336401064\n  Y = total_domination_number(G) = 4.0\n  f(X) = 4.109625\n  Violation = 0.109625 > 0  ✓ (contre-exemple valide)",
+  "cost": 0.002
 }

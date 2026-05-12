@@ -10,7 +10,7 @@
   "found": true,
   "time_s": 0.0,
   "best_violation": 2.0,
-  "best_graph6": ">>graph6<<KhCGGC@?G?_@",
+  "best_graph6": "KhCGGC@?G?_@",
   "invariants": {
     "vertex_cover_number": 6.0,
     "total_domination_number": 10.0

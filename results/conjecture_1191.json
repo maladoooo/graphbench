@@ -10,7 +10,7 @@
   "found": true,
   "time_s": 0.002,
   "best_violation": 0.485848,
-  "best_graph6": ">>graph6<<J^v~v~}~~~?",
+  "best_graph6": "J^v~v~}~~~?",
   "invariants": {
     "clique_number": 6.0,
     "minimum_degree": 9.0
