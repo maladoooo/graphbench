@@ -9,7 +9,7 @@
   "y_name": "average_degree",
   "sign": ">=",
   "found": true,
-  "time_s": 0.005,
+  "time_s": 0.004,
   "best_violation": 0.041667,
   "best_graph6": "O~}?GC@?G?_@?@??_?G?@",
   "invariants": {
@@ -17,5 +17,5 @@
     "maximum_degree": 5.0
   },
   "proof": "Conjecture #6179: If G is a connected graph, claw_free, x = maximum_degree and y = average_degree, then y(G) >= - 1/4 + 7/12 * x(G)\n  X = maximum_degree(G) = 5.0\n  Y = average_degree(G) = 2.625\n  f(X) = 2.666667\n  Violation = 0.041667 > 0  ✓ (contre-exemple valide)",
-  "cost": 0.005
+  "cost": 0.004
 }

@@ -13,8 +13,8 @@
   "best_violation": 67.153846,
   "best_graph6": "K~~{?CB?wF_^",
   "invariants": {
-    "first_zagreb_index": 322.0,
-    "second_zagreb_index": 836.0
+    "second_zagreb_index": 836.0,
+    "first_zagreb_index": 322.0
   },
   "proof": "Conjecture #7205: If G is a connected graph, claw_free, x = first_zagreb_index and y = second_zagreb_index, then y(G) >= - 7740/13 + 121/26 * x(G)\n  X = first_zagreb_index(G) = 322.0\n  Y = second_zagreb_index(G) = 836.0\n  f(X) = 903.153846\n  Violation = 67.153846 > 0  ✓ (contre-exemple valide)",
   "cost": 0.001

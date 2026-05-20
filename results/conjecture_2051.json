@@ -12,8 +12,8 @@
   "best_violation": 1.0,
   "best_graph6": "@",
   "invariants": {
-    "independent_domination_number": 1.0,
-    "vertex_cover_number": 0.0
+    "vertex_cover_number": 0.0,
+    "independent_domination_number": 1.0
   },
   "proof": "Conjecture #2051: If G is a connected graph, x = independent_domination_number and y = vertex_cover_number, then y(G) >= 3/4 + 1/4 * x(G)\n  X = independent_domination_number(G) = 1.0\n  Y = vertex_cover_number(G) = 0.0\n  f(X) = 1.000000\n  Violation = 1.000000 > 0  ✓ (contre-exemple valide)",
   "cost": 0.0

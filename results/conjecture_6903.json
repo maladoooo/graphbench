@@ -13,8 +13,8 @@
   "best_violation": 1.0,
   "best_graph6": "NpKGGC@??@_K?@C???G",
   "invariants": {
-    "total_domination_number": 9.0,
-    "matching_number": 7.0
+    "matching_number": 7.0,
+    "total_domination_number": 9.0
   },
   "proof": "Conjecture #6903: If G is a connected graph, claw_free, x = matching_number and y = total_domination_number, then y(G) <= 1 + x(G)\n  X = matching_number(G) = 7.0\n  Y = total_domination_number(G) = 9.0\n  f(X) = 8.000000\n  Violation = 1.000000 > 0  ✓ (contre-exemple valide)",
   "cost": 0.001

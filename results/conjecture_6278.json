@@ -9,7 +9,7 @@
   "y_name": "clique_number",
   "sign": "<=",
   "found": true,
-  "time_s": 0.088,
+  "time_s": 0.101,
   "best_violation": 0.062491,
   "best_graph6": "N~~~w?O?O?_C?O??o?G",
   "invariants": {
@@ -17,5 +17,5 @@
     "clique_number": 7.0
   },
   "proof": "Conjecture #6278: If G is a connected graph, claw_free, x = average_degree and y = clique_number, then y(G) <= 696548/571895 + 293202/136243 * x(G) - 209954/937553 * x(G)² + 1851/143365 * x(G)³\n  X = average_degree(G) = 3.8666666666666667\n  Y = clique_number(G) = 7.0\n  f(X) = 6.937509\n  Violation = 0.062491 > 0  ✓ (contre-exemple valide)",
-  "cost": 0.088
+  "cost": 0.101
 }

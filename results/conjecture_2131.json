@@ -8,13 +8,13 @@
   "y_name": "proximity",
   "sign": ">=",
   "found": true,
-  "time_s": 1.0,
-  "best_violation": 0.003583,
-  "best_graph6": ">>graph6<<O?GXCB?G??_@?@??o??H?",
+  "time_s": 0.0,
+  "best_violation": 0.008547,
+  "best_graph6": "JKaA`A?_C??",
   "invariants": {
-    "proximity": 0.148515,
-    "matching_number": 6.0
+    "matching_number": 3.0,
+    "proximity": 0.222222
   },
-  "proof": "Conjecture #2131: If G is a connected graph, x = matching_number and y = proximity, then y(G) >= 177/572 - 15/572 * x(G)\n  X = matching_number(G) = 6.0\n  Y = proximity(G) = 0.1485148514851485\n  f(X) = 0.152098\n  Violation = 0.003583 > 0  ✓ (contre-exemple valide)",
-  "cost": 1.0
+  "proof": "Conjecture #2131: If G is a connected graph, x = matching_number and y = proximity, then y(G) >= 177/572 - 15/572 * x(G)\n  X = matching_number(G) = 3.0\n  Y = proximity(G) = 0.2222222222222222\n  f(X) = 0.230769\n  Violation = 0.008547 > 0  ✓ (contre-exemple valide)",
+  "cost": 0.0
 }

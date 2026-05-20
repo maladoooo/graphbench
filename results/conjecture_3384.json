@@ -8,13 +8,13 @@
   "y_name": "vertex_cover_number",
   "sign": ">=",
   "found": true,
-  "time_s": 1.0,
+  "time_s": 0.721,
   "best_violation": 0.321283,
-  "best_graph6": ">>graph6<<NKaA?A?OQ?G?_?@??GG",
+  "best_graph6": "NKaA?A?OQ?G?_?@??GG",
   "invariants": {
     "remoteness": 0.318182,
     "vertex_cover_number": 4.0
   },
   "proof": "Conjecture #3384: If G is a connected graph, x = remoteness and y = vertex_cover_number, then y(G) >= 502194/27901 - 61269445/912567 * x(G) + 30839049/348815 * x(G)² - 5569307/141716 * x(G)³\n  X = remoteness(G) = 0.3181818181818182\n  Y = vertex_cover_number(G) = 4.0\n  f(X) = 4.321283\n  Violation = 0.321283 > 0  ✓ (contre-exemple valide)",
-  "cost": 1.0
+  "cost": 0.721
 }

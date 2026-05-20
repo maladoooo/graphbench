@@ -9,7 +9,7 @@
   "y_name": "remoteness",
   "sign": "<=",
   "found": true,
-  "time_s": 0.106,
+  "time_s": 0.101,
   "best_violation": 0.013559,
   "best_graph6": "Hj^EGCG",
   "invariants": {
@@ -17,5 +17,5 @@
     "density": 0.388889
   },
   "proof": "Conjecture #6124: If G is a connected graph, claw_free, x = density and y = remoteness, then y(G) <= 17/59 + 378/295 * x(G)\n  X = density(G) = 0.3888888888888889\n  Y = remoteness(G) = 0.8\n  f(X) = 0.786441\n  Violation = 0.013559 > 0  ✓ (contre-exemple valide)",
-  "cost": 0.106
+  "cost": 0.101
 }

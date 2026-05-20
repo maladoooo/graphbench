@@ -13,8 +13,8 @@
   "best_violation": 3.772429,
   "best_graph6": "@",
   "invariants": {
-    "radius": 0.0,
-    "independence_number": 1.0
+    "independence_number": 1.0,
+    "radius": 0.0
   },
   "proof": "Conjecture #5998: If G is a connected graph, claw_free, x = radius and y = independence_number, then y(G) <= - 19407/7000 + 115/14 * x(G) - 71/28 * x(G)² + 1/4 * x(G)³\n  X = radius(G) = 0.0\n  Y = independence_number(G) = 1.0\n  f(X) = -2.772429\n  Violation = 3.772429 > 0  ✓ (contre-exemple valide)",
   "cost": 0.0
