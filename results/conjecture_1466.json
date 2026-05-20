@@ -8,13 +8,13 @@
   "y_name": "independent_domination_number",
   "sign": "<=",
   "found": true,
-  "time_s": 0.006,
-  "best_violation": 1.486714,
-  "best_graph6": "Cs",
+  "time_s": 0.85,
+  "best_violation": 0.486714,
+  "best_graph6": "KUOPcDO?G??D",
   "invariants": {
-    "independent_domination_number": 3.0,
-    "domination_number": 1.0
+    "independent_domination_number": 6.0,
+    "domination_number": 5.0
   },
-  "proof": "Conjecture #1466: If G is a connected graph, x = domination_number and y = independent_domination_number, then y(G) <= - 51407/7000 + 254/21 * x(G) - 25/7 * x(G)² + 1/3 * x(G)³\n  X = domination_number(G) = 1.0\n  Y = independent_domination_number(G) = 3.0\n  f(X) = 1.513286\n  Violation = 1.486714 > 0  ✓ (contre-exemple valide)",
-  "cost": 0.006
+  "proof": "Conjecture #1466: If G is a connected graph, x = domination_number and y = independent_domination_number, then y(G) <= - 51407/7000 + 254/21 * x(G) - 25/7 * x(G)² + 1/3 * x(G)³\n  X = domination_number(G) = 5.0\n  Y = independent_domination_number(G) = 6.0\n  f(X) = 5.513286\n  Violation = 0.486714 > 0  ✓ (contre-exemple valide)",
+  "cost": 0.85
 }

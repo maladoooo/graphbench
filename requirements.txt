@@ -1,5 +1,8 @@
 networkx>=3.0
-pandas>=2.0
+# pandas>=3 peut casser Streamlit / stacks « data » installés dans le même env
+pandas>=2.0,<3
 openpyxl>=3.1
-numpy>=1.24
+# NumPy 2 impose une ABI différente : pyarrow/pandas anciens peuvent planter
+# (erreur « compiled using NumPy 1.x »). Reste compatible avec scipy/pandas 2.x.
+numpy>=1.24,<2
 scipy>=1.10

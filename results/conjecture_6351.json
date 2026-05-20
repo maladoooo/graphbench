@@ -10,12 +10,12 @@
   "sign": "<=",
   "found": true,
   "time_s": 0.0,
-  "best_violation": 0.412255,
-  "best_graph6": "G{aCC?",
+  "best_violation": 1.297537,
+  "best_graph6": "@",
   "invariants": {
-    "clique_number": 3.0,
-    "maximum_degree": 7.0
+    "clique_number": 1.0,
+    "maximum_degree": 0.0
   },
-  "proof": "Conjecture #6351: If G is a connected graph, claw_free, x = clique_number and y = maximum_degree, then y(G) <= - 1751731/231000 + 19925/2772 * x(G) - 871/924 * x(G)² + 4/99 * x(G)³\n  X = clique_number(G) = 3.0\n  Y = maximum_degree(G) = 7.0\n  f(X) = 6.587745\n  Violation = 0.412255 > 0  ✓ (contre-exemple valide)",
+  "proof": "Conjecture #6351: If G is a connected graph, claw_free, x = clique_number and y = maximum_degree, then y(G) <= - 1751731/231000 + 19925/2772 * x(G) - 871/924 * x(G)² + 4/99 * x(G)³\n  X = clique_number(G) = 1.0\n  Y = maximum_degree(G) = 0.0\n  f(X) = -1.297537\n  Violation = 1.297537 > 0  ✓ (contre-exemple valide)",
   "cost": 0.0
 }

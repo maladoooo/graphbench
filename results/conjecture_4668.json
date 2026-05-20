@@ -10,12 +10,12 @@
   "sign": "<=",
   "found": true,
   "time_s": 0.0,
-  "best_violation": 1.486714,
-  "best_graph6": "Cs",
+  "best_violation": 8.343857,
+  "best_graph6": "@",
   "invariants": {
-    "vertex_cover_number": 1.0,
-    "independent_domination_number": 3.0
+    "independent_domination_number": 1.0,
+    "vertex_cover_number": 0.0
   },
-  "proof": "Conjecture #4668: If G is a connected graph, tree, x = vertex_cover_number and y = independent_domination_number, then y(G) <= - 51407/7000 + 254/21 * x(G) - 25/7 * x(G)² + 1/3 * x(G)³\n  X = vertex_cover_number(G) = 1.0\n  Y = independent_domination_number(G) = 3.0\n  f(X) = 1.513286\n  Violation = 1.486714 > 0  ✓ (contre-exemple valide)",
+  "proof": "Conjecture #4668: If G is a connected graph, tree, x = vertex_cover_number and y = independent_domination_number, then y(G) <= - 51407/7000 + 254/21 * x(G) - 25/7 * x(G)² + 1/3 * x(G)³\n  X = vertex_cover_number(G) = 0.0\n  Y = independent_domination_number(G) = 1.0\n  f(X) = -7.343857\n  Violation = 8.343857 > 0  ✓ (contre-exemple valide)",
   "cost": 0.0
 }

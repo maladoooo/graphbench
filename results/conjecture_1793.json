@@ -8,13 +8,13 @@
   "y_name": "second_smallest_laplace_eigenvalue",
   "sign": ">=",
   "found": true,
-  "time_s": 0.002,
-  "best_violation": 0.002649,
-  "best_graph6": "M~~~{?@?WB_N?^?^_",
+  "time_s": 0.001,
+  "best_violation": 0.2749,
+  "best_graph6": "@",
   "invariants": {
-    "second_smallest_laplace_eigenvalue": 0.227998,
-    "independence_number": 2.0
+    "second_smallest_laplace_eigenvalue": 0.0,
+    "independence_number": 1.0
   },
-  "proof": "Conjecture #1793: If G is a connected graph, x = independence_number and y = second_smallest_laplace_eigenvalue, then y(G) >= 247857/776608 - 20663/466926 * x(G)\n  X = independence_number(G) = 2.0\n  Y = second_smallest_laplace_eigenvalue(G) = 0.22799812734123487\n  f(X) = 0.230647\n  Violation = 0.002649 > 0  ✓ (contre-exemple valide)",
-  "cost": 0.002
+  "proof": "Conjecture #1793: If G is a connected graph, x = independence_number and y = second_smallest_laplace_eigenvalue, then y(G) >= 247857/776608 - 20663/466926 * x(G)\n  X = independence_number(G) = 1.0\n  Y = second_smallest_laplace_eigenvalue(G) = 0.0\n  f(X) = 0.274900\n  Violation = 0.274900 > 0  ✓ (contre-exemple valide)",
+  "cost": 0.001
 }

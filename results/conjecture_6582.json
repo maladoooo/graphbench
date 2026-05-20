@@ -9,13 +9,13 @@
   "y_name": "matching_number",
   "sign": ">=",
   "found": true,
-  "time_s": 0.001,
+  "time_s": 0.02,
   "best_violation": 1.0,
-  "best_graph6": "JCGY?G?_Mo?",
+  "best_graph6": "NpKGGC@??@_K?@C???G",
   "invariants": {
-    "matching_number": 5.0,
-    "total_domination_number": 7.0
+    "total_domination_number": 9.0,
+    "matching_number": 7.0
   },
-  "proof": "Conjecture #6582: If G is a connected graph, claw_free, x = total_domination_number and y = matching_number, then y(G) >= - 1 + x(G)\n  X = total_domination_number(G) = 7.0\n  Y = matching_number(G) = 5.0\n  f(X) = 6.000000\n  Violation = 1.000000 > 0  ✓ (contre-exemple valide)",
-  "cost": 0.001
+  "proof": "Conjecture #6582: If G is a connected graph, claw_free, x = total_domination_number and y = matching_number, then y(G) >= - 1 + x(G)\n  X = total_domination_number(G) = 9.0\n  Y = matching_number(G) = 7.0\n  f(X) = 8.000000\n  Violation = 1.000000 > 0  ✓ (contre-exemple valide)",
+  "cost": 0.02
 }

@@ -69,6 +69,55 @@ Retourne UNIQUEMENT le code Python de la fonction, sans explication, sans markdo
     return prompt
 
 
+def build_crossover_prompt(
+    parent_a: dict,
+    parent_b: dict,
+    conjecture_descriptions: List[str],
+) -> str:
+    """
+    Construit un prompt de CROSSOVER : on demande au LLM de COMBINER deux fonctions
+    successful pour en produire une troisième héritant des forces de chacune.
+
+    C'est l'opérateur "crossover" classique d'un GA, appliqué à du code Python via LLM.
+    """
+    conj_text = "\n".join(f"  - {d}" for d in conjecture_descriptions[:5])
+    code_a = parent_a["code"][:500]
+    code_b = parent_b["code"][:500]
+
+    prompt = f"""Tu es un expert en évolution génétique de code Python pour la théorie des graphes.
+
+Contexte : on cherche des contre-exemples à des conjectures via recherche locale.
+La fonction `heuristic_score(G, invariants, conjecture)` guide la recherche.
+Score plus élevé = graphe plus prometteur.
+
+Conjectures testées :
+{conj_text}
+
+Voici DEUX fonctions parentes qui ont bien marché :
+
+--- PARENT A (trouvé={parent_a['found']}, coût={parent_a['score']:.1f}) ---
+{code_a}
+
+--- PARENT B (trouvé={parent_b['found']}, coût={parent_b['score']:.1f}) ---
+{code_b}
+
+Ta mission : produire un ENFANT qui COMBINE les meilleures idées des deux parents.
+- Garde les termes (bonus/pénalités) qui semblent les plus efficaces
+- Combine de façon astucieuse les poids
+- Tu peux légèrement modifier les coefficients pour innover
+
+CONTRAINTES STRICTES :
+1. Signature exacte : `def heuristic_score(G, invariants, conjecture):`
+2. Retourne un float
+3. Zéro import, zéro exception (utilise .get("clé", 0))
+4. La violation DOIT être le terme dominant : `return 10.0 * violation + bonus - penalty`
+5. NE JAMAIS appeler de méthodes NetworkX (G.diameter(), G.radius() qui peuvent crasher) — utilise invariants.get(...)
+
+Retourne UNIQUEMENT le code Python, sans markdown, sans explication.
+"""
+    return prompt
+
+
 def call_llm(prompt: str, api_key: Optional[str] = None) -> Optional[str]:
     """
     Appelle l'API Groq pour générer une nouvelle fonction de score.

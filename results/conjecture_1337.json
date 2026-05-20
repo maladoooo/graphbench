@@ -8,13 +8,13 @@
   "y_name": "average_degree",
   "sign": "<=",
   "found": true,
-  "time_s": 0.072,
+  "time_s": 0.074,
   "best_violation": 0.066667,
   "best_graph6": "RWCuX\\HsQQDGGi@MF?d\\oIc?ECK?B?",
   "invariants": {
-    "triangle_number": 21.0,
-    "average_degree": 6.0
+    "average_degree": 6.0,
+    "triangle_number": 21.0
   },
   "proof": "Conjecture #1337: If G is a connected graph, x = triangle_number and y = average_degree, then y(G) <= 5 + 2/45 * x(G)\n  X = triangle_number(G) = 21.0\n  Y = average_degree(G) = 6.0\n  f(X) = 5.933333\n  Violation = 0.066667 > 0  ✓ (contre-exemple valide)",
-  "cost": 0.072
+  "cost": 0.074
 }

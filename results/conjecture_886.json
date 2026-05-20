@@ -12,8 +12,8 @@
   "best_violation": 2.0,
   "best_graph6": "SGO??CCa?E?d??K?EGCH?C?p?A?OCKC_?",
   "invariants": {
-    "triangle_number": 6.0,
-    "maximum_degree": 3.0
+    "maximum_degree": 3.0,
+    "triangle_number": 6.0
   },
   "proof": "Conjecture #886: If G is a connected graph, x = maximum_degree and y = triangle_number, then y(G) <= - 1/6 * x(G) + 1/6 * x(G)³\n  X = maximum_degree(G) = 3.0\n  Y = triangle_number(G) = 6.0\n  f(X) = 4.000000\n  Violation = 2.000000 > 0  ✓ (contre-exemple valide)",
   "cost": 0.002

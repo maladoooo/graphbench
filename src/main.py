@@ -129,6 +129,18 @@ def run_batch(
     fastest_result = None
     found_times: List[float] = []
 
+    # Si --heuristic : tenter de charger la fonction FunSearch évoluée.
+    # Sinon fallback sur le baseline `heuristic_score` de scoring/violation.py.
+    heuristic_fn_loaded = None
+    heuristic_source = "baseline (scoring/violation.py)"
+    if use_heuristic:
+        from .scoring.violation import load_best_heuristic
+        fn = load_best_heuristic()
+        if fn is not None:
+            heuristic_fn_loaded = fn
+            heuristic_source = "FunSearch (results/funsearch/best_heuristic.py)"
+        print(f"  🧬 Fonction de score utilisée : {heuristic_source}")
+
     for i, conj in enumerate(conjectures, 1):
         print(f"\n[{i}/{len(conjectures)}] Conjecture #{conj.id} ({conj.subgroups})")
         json_path = RESULTS_DIR / f"conjecture_{conj.id}.json"
@@ -148,7 +160,8 @@ def run_batch(
                 continue
 
         result = search(conj, time_limit=time_limit, verbose=verbose,
-                        use_heuristic=use_heuristic, stagnation_limit=stagnation_limit)
+                        use_heuristic=use_heuristic, heuristic_fn=heuristic_fn_loaded,
+                        stagnation_limit=stagnation_limit)
         results.append(result)
         total_cost += result.cost
 

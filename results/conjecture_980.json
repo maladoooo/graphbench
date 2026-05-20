@@ -8,13 +8,13 @@
   "y_name": "clique_number",
   "sign": "<=",
   "found": true,
-  "time_s": 0.002,
-  "best_violation": 0.068182,
-  "best_graph6": "J~aCCA?_C??",
+  "time_s": 0.0,
+  "best_violation": 1.5,
+  "best_graph6": "@",
   "invariants": {
-    "clique_number": 4.0,
-    "average_degree": 2.363636
+    "average_degree": 0.0,
+    "clique_number": 1.0
   },
-  "proof": "Conjecture #980: If G is a connected graph, x = average_degree and y = clique_number, then y(G) <= - 1/2 + 15/8 * x(G)\n  X = average_degree(G) = 2.3636363636363638\n  Y = clique_number(G) = 4.0\n  f(X) = 3.931818\n  Violation = 0.068182 > 0  ✓ (contre-exemple valide)",
-  "cost": 0.002
+  "proof": "Conjecture #980: If G is a connected graph, x = average_degree and y = clique_number, then y(G) <= - 1/2 + 15/8 * x(G)\n  X = average_degree(G) = 0.0\n  Y = clique_number(G) = 1.0\n  f(X) = -0.500000\n  Violation = 1.500000 > 0  ✓ (contre-exemple valide)",
+  "cost": 0.0
 }

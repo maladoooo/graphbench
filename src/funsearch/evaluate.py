@@ -18,10 +18,34 @@ from ..benchmark.conjecture import Conjecture
 from ..search.search_simple import search
 
 
-# Fonction de base (seed) — violation pure
+# Fonction de base (seed minimal) — violation pure (point de départ)
 SEED_FUNCTION = """def heuristic_score(G, invariants, conjecture):
     \"\"\"Fonction de base : score = violation pure.\"\"\"
     return conjecture.violation(invariants)
+"""
+
+# Fonction baseline améliorée (Partie 1 + bonus structurels, exemple du TP section 7.3)
+# Sert de SEED ENRICHI : FunSearch part de cette base et l'améliore par évolution.
+BASELINE_FUNCTION = """def heuristic_score(G, invariants, conjecture):
+    \"\"\"Baseline enrichie : violation + bonus structurels.
+    Inspirée de l'exemple TP section 7.3 (coefficients ajustés).\"\"\"
+    violation = conjecture.violation(invariants)
+    n = invariants.get("order", G.number_of_nodes())
+    m = invariants.get("size", G.number_of_edges())
+    diam = invariants.get("diameter", 0)
+    Delta = invariants.get("maximum_degree", 0)
+    triangles = invariants.get("triangle_number", 0)
+    density = 0.0
+    if n > 1:
+        density = 2 * m / (n * (n - 1))
+    return (
+        10.0 * violation
+        + 0.3 * diam
+        + 0.2 * Delta
+        + 0.1 * triangles
+        - 0.005 * n
+        - 0.1 * abs(density - 0.5)
+    )
 """
 
 

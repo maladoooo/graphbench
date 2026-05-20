@@ -9,13 +9,13 @@
   "y_name": "total_domination_number",
   "sign": "<=",
   "found": true,
-  "time_s": 0.0,
-  "best_violation": 0.886714,
-  "best_graph6": "GhCGKC",
+  "time_s": 1.0,
+  "best_violation": 1.601,
+  "best_graph6": ">>graph6<<MpE_GEc?G?}?K@??_",
   "invariants": {
-    "radius": 4.0,
-    "total_domination_number": 6.0
+    "total_domination_number": 7.0,
+    "radius": 3.0
   },
-  "proof": "Conjecture #5996: If G is a connected graph, claw_free, x = radius and y = total_domination_number, then y(G) <= - 36207/7000 + 218/21 * x(G) - 23/7 * x(G)² + 1/3 * x(G)³\n  X = radius(G) = 4.0\n  Y = total_domination_number(G) = 6.0\n  f(X) = 5.113286\n  Violation = 0.886714 > 0  ✓ (contre-exemple valide)",
-  "cost": 0.0
+  "proof": "Conjecture #5996: If G is a connected graph, claw_free, x = radius and y = total_domination_number, then y(G) <= - 36207/7000 + 218/21 * x(G) - 23/7 * x(G)² + 1/3 * x(G)³\n  X = radius(G) = 3.0\n  Y = total_domination_number(G) = 7.0\n  f(X) = 5.399000\n  Violation = 1.601000 > 0  ✓ (contre-exemple valide)",
+  "cost": 1.0
 }

@@ -8,13 +8,13 @@
   "y_name": "triangle_number",
   "sign": "<=",
   "found": true,
-  "time_s": 0.387,
+  "time_s": 0.391,
   "best_violation": 1.207806,
   "best_graph6": "X}w?GKG@oIF?AGAG_CZoG@U?FO??_G?_C@??????@@???@Ac?@?",
   "invariants": {
-    "triangle_number": 40.0,
-    "largest_eigenvalue": 5.063674
+    "largest_eigenvalue": 5.063674,
+    "triangle_number": 40.0
   },
   "proof": "Conjecture #3550: If G is a connected graph, x = largest_eigenvalue and y = triangle_number, then y(G) <= 5306234/359925 + 3381239/769239 * x(G) - 156301/129798 * x(G)² + 193839/770395 * x(G)³\n  X = largest_eigenvalue(G) = 5.063674225686048\n  Y = triangle_number(G) = 40.0\n  f(X) = 38.792194\n  Violation = 1.207806 > 0  ✓ (contre-exemple valide)",
-  "cost": 0.387
+  "cost": 0.391
 }

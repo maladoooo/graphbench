@@ -8,13 +8,13 @@
   "y_name": "proximity",
   "sign": ">=",
   "found": true,
-  "time_s": 0.0,
-  "best_violation": 0.008547,
-  "best_graph6": "JKaA`A?_C??",
+  "time_s": 1.0,
+  "best_violation": 0.001304,
+  "best_graph6": ">>graph6<<S???GA?@C?IGII_?_?`P??_???O?K??__",
   "invariants": {
-    "vertex_cover_number": 3.0,
-    "proximity": 0.222222
+    "proximity": 0.150794,
+    "vertex_cover_number": 6.0
   },
-  "proof": "Conjecture #1919: If G is a connected graph, x = vertex_cover_number and y = proximity, then y(G) >= 177/572 - 15/572 * x(G)\n  X = vertex_cover_number(G) = 3.0\n  Y = proximity(G) = 0.2222222222222222\n  f(X) = 0.230769\n  Violation = 0.008547 > 0  ✓ (contre-exemple valide)",
-  "cost": 0.0
+  "proof": "Conjecture #1919: If G is a connected graph, x = vertex_cover_number and y = proximity, then y(G) >= 177/572 - 15/572 * x(G)\n  X = vertex_cover_number(G) = 6.0\n  Y = proximity(G) = 0.15079365079365079\n  f(X) = 0.152098\n  Violation = 0.001304 > 0  ✓ (contre-exemple valide)",
+  "cost": 1.0
 }

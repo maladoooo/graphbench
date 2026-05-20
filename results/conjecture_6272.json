@@ -9,13 +9,13 @@
   "y_name": "clique_number",
   "sign": "<=",
   "found": true,
-  "time_s": 0.003,
-  "best_violation": 0.08,
-  "best_graph6": "I~aCCA?_?",
+  "time_s": 0.0,
+  "best_violation": 1.4,
+  "best_graph6": "@",
   "invariants": {
-    "clique_number": 4.0,
-    "average_degree": 2.4
+    "average_degree": 0.0,
+    "clique_number": 1.0
   },
-  "proof": "Conjecture #6272: If G is a connected graph, claw_free, x = average_degree and y = clique_number, then y(G) <= - 2/5 + 9/5 * x(G)\n  X = average_degree(G) = 2.4\n  Y = clique_number(G) = 4.0\n  f(X) = 3.920000\n  Violation = 0.080000 > 0  ✓ (contre-exemple valide)",
-  "cost": 0.003
+  "proof": "Conjecture #6272: If G is a connected graph, claw_free, x = average_degree and y = clique_number, then y(G) <= - 2/5 + 9/5 * x(G)\n  X = average_degree(G) = 0.0\n  Y = clique_number(G) = 1.0\n  f(X) = -0.400000\n  Violation = 1.400000 > 0  ✓ (contre-exemple valide)",
+  "cost": 0.0
 }

@@ -9,13 +9,13 @@
   "y_name": "independent_domination_number",
   "sign": "<=",
   "found": true,
-  "time_s": 0.002,
-  "best_violation": 2.0,
-  "best_graph6": "Cs",
+  "time_s": 0.001,
+  "best_violation": 8.0,
+  "best_graph6": "@",
   "invariants": {
-    "diameter": 2.0,
-    "independent_domination_number": 3.0
+    "diameter": 0.0,
+    "independent_domination_number": 1.0
   },
-  "proof": "Conjecture #4247: If G is a connected graph, tree, x = diameter and y = independent_domination_number, then y(G) <= - 7 + 4 * x(G)\n  X = diameter(G) = 2.0\n  Y = independent_domination_number(G) = 3.0\n  f(X) = 1.000000\n  Violation = 2.000000 > 0  ✓ (contre-exemple valide)",
-  "cost": 0.002
+  "proof": "Conjecture #4247: If G is a connected graph, tree, x = diameter and y = independent_domination_number, then y(G) <= - 7 + 4 * x(G)\n  X = diameter(G) = 0.0\n  Y = independent_domination_number(G) = 1.0\n  f(X) = -7.000000\n  Violation = 8.000000 > 0  ✓ (contre-exemple valide)",
+  "cost": 0.001
 }

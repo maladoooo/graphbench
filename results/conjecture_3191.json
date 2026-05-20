@@ -8,13 +8,13 @@
   "y_name": "vertex_cover_number",
   "sign": ">=",
   "found": true,
-  "time_s": 0.389,
+  "time_s": 1.0,
   "best_violation": 0.123457,
-  "best_graph6": "JKaA`A?_C??",
+  "best_graph6": ">>graph6<<JKaA`A?_C??",
   "invariants": {
-    "proximity": 0.222222,
-    "vertex_cover_number": 3.0
+    "vertex_cover_number": 3.0,
+    "proximity": 0.222222
   },
   "proof": "Conjecture #3191: If G is a connected graph, x = proximity and y = vertex_cover_number, then y(G) >= 19/3 - 130/9 * x(G)\n  X = proximity(G) = 0.2222222222222222\n  Y = vertex_cover_number(G) = 3.0\n  f(X) = 3.123457\n  Violation = 0.123457 > 0  ✓ (contre-exemple valide)",
-  "cost": 0.389
+  "cost": 1.0
 }

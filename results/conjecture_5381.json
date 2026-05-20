@@ -9,13 +9,13 @@
   "y_name": "remoteness",
   "sign": ">=",
   "found": true,
-  "time_s": 0.01,
-  "best_violation": 0.000504,
-  "best_graph6": "\\kI@C?__@?O?G?_?C?C??G?A??@??C???_??_??@???O???G???_???C???C????G????",
+  "time_s": 1.0,
+  "best_violation": 0.478469,
+  "best_graph6": ">>graph6<<A_",
   "invariants": {
-    "remoteness": 0.518519,
-    "proximity": 0.341463
+    "proximity": 1.0,
+    "remoteness": 1.0
   },
-  "proof": "Conjecture #5381: If G is a connected graph, tree, x = proximity and y = remoteness, then y(G) >= 9/418 + 609/418 * x(G)\n  X = proximity(G) = 0.34146341463414637\n  Y = remoteness(G) = 0.5185185185185185\n  f(X) = 0.519022\n  Violation = 0.000504 > 0  ✓ (contre-exemple valide)",
-  "cost": 0.01
+  "proof": "Conjecture #5381: If G is a connected graph, tree, x = proximity and y = remoteness, then y(G) >= 9/418 + 609/418 * x(G)\n  X = proximity(G) = 1.0\n  Y = remoteness(G) = 1.0\n  f(X) = 1.478469\n  Violation = 0.478469 > 0  ✓ (contre-exemple valide)",
+  "cost": 1.0
 }

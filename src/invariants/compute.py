@@ -148,46 +148,99 @@ def compute_invariants(G: nx.Graph, names: Set[str]) -> Dict[str, float]:
 
 # ─── Implémentations internes ───────────────────────────────────────────────
 
+# ─── Helpers bitmask pour branch-and-bound exact ─────────────────────────────
+
+def _to_bitmask_adj(G: nx.Graph):
+    """Convertit un graphe NetworkX en (adj_list_of_bitmasks, n).
+    Relabel les sommets en 0..n-1 si nécessaire."""
+    n = G.number_of_nodes()
+    nodes = list(G.nodes())
+    if nodes != list(range(n)):
+        G = nx.convert_node_labels_to_integers(G)
+    adj = [0] * n
+    for u, v in G.edges():
+        adj[u] |= (1 << v)
+        adj[v] |= (1 << u)
+    return tuple(adj), n
+
+
+def _min_set_cover_size(masks, n: int):
+    """Branch-and-bound : taille MIN d'un sous-ensemble de masks dont l'union couvre 0..n-1.
+    Retourne None si impossible."""
+    import math as _math
+    all_mask = (1 << n) - 1
+    union = 0
+    for mask in masks:
+        union |= mask
+    if union != all_mask:
+        return None
+
+    candidates_for_v = tuple(
+        tuple(i for i, mask in enumerate(masks) if mask & (1 << v))
+        for v in range(n)
+    )
+    max_cover = max(mask.bit_count() for mask in masks) if masks else 1
+    best = [n + 1]
+
+    def dfs(covered, available, count):
+        if count >= best[0]:
+            return
+        uncovered = all_mask & ~covered
+        if not uncovered:
+            best[0] = count
+            return
+        if count + _math.ceil(uncovered.bit_count() / max_cover) >= best[0]:
+            return
+
+        def cand_count(v):
+            return sum(1 for idx in candidates_for_v[v]
+                       if (available & (1 << idx)) and (masks[idx] & uncovered))
+
+        chosen_v = min(
+            (v for v in range(n) if (1 << v) & uncovered),
+            key=cand_count,
+        )
+        candidates = [
+            idx for idx in candidates_for_v[chosen_v]
+            if (available & (1 << idx)) and (masks[idx] & uncovered)
+        ]
+        candidates.sort(key=lambda idx: (masks[idx] & uncovered).bit_count(), reverse=True)
+        for idx in candidates:
+            dfs(covered | masks[idx], available & ~(1 << idx), count + 1)
+
+    dfs(0, (1 << len(masks)) - 1, 0)
+    return best[0] if best[0] <= n else None
+
+
 def _domination_number(G: nx.Graph) -> int:
-    """Approximation gloutonne du nombre de domination."""
+    """Nombre de domination EXACT via branch-and-bound (min set cover sur voisinages fermés)."""
     if G.number_of_nodes() == 0:
         return 0
-    dominated = set()
-    domset = set()
-    nodes = sorted(G.nodes(), key=lambda v: G.degree(v), reverse=True)
-    for v in nodes:
-        if v not in dominated:
-            domset.add(v)
-            dominated.add(v)
-            dominated.update(G.neighbors(v))
-    return len(domset)
+    adj, n = _to_bitmask_adj(G)
+    closed = tuple(adj[v] | (1 << v) for v in range(n))
+    result = _min_set_cover_size(closed, n)
+    if result is None:
+        # Théoriquement impossible (chaque sommet se domine lui-même)
+        return n
+    return result
 
 
 def _total_domination_number(G: nx.Graph) -> int:
-    """Approximation gloutonne du nombre de domination totale."""
+    """Nombre de domination totale EXACT via branch-and-bound (min set cover sur voisinages OUVERTS).
+    LÈVE ValueError s'il n'existe pas de total dominating set (n=1 ou sommet isolé)."""
     if G.number_of_nodes() == 0:
         return 0
-    n = G.number_of_nodes()
-    if n <= 1:
-        return n
-    dominated = set()
-    domset = set()
-    nodes = sorted(G.nodes(), key=lambda v: G.degree(v), reverse=True)
-    for v in nodes:
-        if len(domset) >= n:
-            break
-        neighbors = set(G.neighbors(v))
-        if neighbors - dominated:
-            domset.add(v)
-            dominated.update(neighbors)
-        if dominated >= set(G.nodes()):
-            break
-    # Fallback si pas de domination totale possible (graphe avec noeuds isolés)
-    return max(2, len(domset))
+    adj, n = _to_bitmask_adj(G)
+    # Voisinages ouverts (sans soi-même)
+    result = _min_set_cover_size(adj, n)
+    if result is None:
+        # Pas de TDS — invariant non défini. On lève comme le fait le vérificateur strict.
+        raise ValueError("no total dominating set exists (isolated vertex)")
+    return result
 
 
 def _independence_number(G: nx.Graph) -> int:
-    """Calcule le nombre d'indépendance via complémentaire + clique."""
+    """Nombre d'indépendance EXACT via complémentaire + max clique (déjà exact via find_cliques)."""
     if G.number_of_nodes() == 0:
         return 0
     complement = nx.complement(G)
@@ -199,31 +252,64 @@ def _independence_number(G: nx.Graph) -> int:
 
 def _independent_domination_number(G: nx.Graph) -> int:
     """
-    Nombre de domination indépendante = taille du plus petit ensemble indépendant dominant.
-    Approximation: on cherche un ensemble indépendant maximal de petite taille.
+    Nombre de domination indépendante EXACT (i(G)) via branch-and-bound.
+    = MIN sur les ensembles S qui sont à la fois INDÉPENDANTS et DOMINANTS.
+    NB : ce N'EST PAS la taille d'un ensemble indépendant maximal !
+    Pour K_{1,3} : i = 1 (le centre seul), pas 3 (les feuilles).
     """
+    import math as _math
     if G.number_of_nodes() == 0:
         return 0
-    # Ensemble indépendant maximal glouton (ordre degré décroissant)
-    nodes = sorted(G.nodes(), key=lambda v: G.degree(v))
-    independent = set()
-    excluded = set()
-    for v in nodes:
-        if v not in excluded:
-            independent.add(v)
-            excluded.update(G.neighbors(v))
-            excluded.add(v)
-    return len(independent)
+    adj, n = _to_bitmask_adj(G)
+    closed = tuple(adj[v] | (1 << v) for v in range(n))
+    all_mask = (1 << n) - 1
+    candidates_for_v = tuple(
+        tuple(i for i, mask in enumerate(closed) if mask & (1 << v))
+        for v in range(n)
+    )
+    max_cover = max(mask.bit_count() for mask in closed) if closed else 1
+    best = [n + 1]
+
+    def dfs(dominated, allowed, count):
+        if count >= best[0]:
+            return
+        uncovered = all_mask & ~dominated
+        if not uncovered:
+            best[0] = count
+            return
+        if count + _math.ceil(uncovered.bit_count() / max_cover) >= best[0]:
+            return
+
+        def cand_count(v):
+            return sum(1 for idx in candidates_for_v[v]
+                       if (allowed & (1 << idx)) and (closed[idx] & uncovered))
+
+        chosen_v = min(
+            (v for v in range(n) if (1 << v) & uncovered),
+            key=cand_count,
+        )
+        candidates = [
+            idx for idx in candidates_for_v[chosen_v]
+            if (allowed & (1 << idx)) and (closed[idx] & uncovered)
+        ]
+        candidates.sort(key=lambda idx: (closed[idx] & uncovered).bit_count(), reverse=True)
+        for idx in candidates:
+            # Contrainte d'indépendance : on retire idx ET tous ses voisins de allowed
+            forbidden = adj[idx] | (1 << idx)
+            dfs(dominated | closed[idx], allowed & ~forbidden, count + 1)
+
+    dfs(0, all_mask, 0)
+    return best[0] if best[0] <= n else n
 
 
 def _proximity(G: nx.Graph) -> float:
     """
     Proximity = MIN de la closeness centrality sur tous les sommets.
     closeness(v) = (n-1) / sum_des_distances_depuis_v
-    C'est le sommet le MOINS central (le plus excentrique).
+    LÈVE ValueError si n <= 1 ou disconnected (proximity non définie).
     """
     if not nx.is_connected(G) or G.number_of_nodes() <= 1:
-        return 0.0
+        raise ValueError("proximity undefined (n <= 1 or disconnected)")
     closeness = nx.closeness_centrality(G)
     return float(min(closeness.values()))
 
@@ -232,10 +318,10 @@ def _remoteness(G: nx.Graph) -> float:
     """
     Remoteness = MAX de la closeness centrality sur tous les sommets.
     closeness(v) = (n-1) / sum_des_distances_depuis_v
-    C'est le sommet le PLUS central (le plus proche de tous les autres).
+    LÈVE ValueError si n <= 1 ou disconnected (remoteness non définie).
     """
     if not nx.is_connected(G) or G.number_of_nodes() <= 1:
-        return 0.0
+        raise ValueError("remoteness undefined (n <= 1 or disconnected)")
     closeness = nx.closeness_centrality(G)
     return float(max(closeness.values()))
 

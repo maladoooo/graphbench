@@ -136,17 +136,57 @@ def search(
     verbose: bool = False,
     stagnation_limit: Optional[int] = None,
 ) -> SearchResult:
-    """Wrapper avec cache cross-conjectures."""
+    """Wrapper avec cache cross-conjectures ET vérification stricte du contre-exemple."""
     t_start_outer = time.perf_counter()
     cached = _try_cached(conjecture, t_start_outer)
-    if cached is not None:
+    if cached is not None and _strict_verify(cached, conjecture):
         return cached
     result = _search_main(
         conjecture, time_limit, population_size, initial_n,
         seed, use_heuristic, heuristic_fn, verbose, stagnation_limit,
     )
+    # Vérification stricte avant de stocker dans le cache et retourner
+    if result.found and not _strict_verify(result, conjecture):
+        # Le "contre-exemple" est INVALIDE (classe ou violation incorrecte)
+        # → on marque comme non trouvé pour ne PAS polluer le cache
+        elapsed = time.perf_counter() - t_start_outer
+        result = SearchResult(
+            conjecture_id=conjecture.id,
+            found=False,
+            time_s=elapsed,
+            best_violation=float("-inf"),
+            best_graph=None,
+            best_graph6="",
+            proof=f"Contre-exemple rejeté par la vérification stricte",
+            cost=120.0,
+        )
     _store_in_cache(conjecture, result)
     return result
+
+
+def _strict_verify(result: SearchResult, conjecture: Conjecture) -> bool:
+    """Re-vérifie strictement qu'un contre-exemple est valide :
+    1. Le graphe satisfait toutes les classes requises (claw_free, tree, etc.)
+    2. La violation est strictement > 0 quand recalculée avec les invariants EXACTS
+    Retourne False si l'une de ces conditions n'est pas remplie.
+    """
+    if not result.found or result.best_graph is None:
+        return False
+    from ..graphs.classes import check_graph_class
+    required = {conjecture.x_name, conjecture.y_name}
+    # 1. Vérif classe
+    try:
+        if not check_graph_class(result.best_graph, conjecture.subgroups):
+            return False
+    except Exception:
+        return False
+    # 2. Vérif violation exacte
+    try:
+        exact_inv = compute_invariants(result.best_graph, required)
+        exact_viol = conjecture.violation(exact_inv)
+        return exact_viol > 1e-9
+    except Exception:
+        return False
 
 
 def _search_main(
@@ -292,7 +332,17 @@ def _search_inner(
 
     # ── FILTRE INTELLIGENT ──────────────────────────────────────────────────
     from ..graphs.generate import generate_smart
+    from ..graphs.classes import check_graph_class
     smart_G = generate_smart(conjecture, seed=42)
+    if smart_G is not None:
+        # VÉRIFICATION DE CLASSE : le smart filter peut produire un graphe hors-classe
+        # (ex: K_n + leaves contient un claw → invalide pour claw_free)
+        try:
+            in_class = check_graph_class(smart_G, conjecture.subgroups)
+        except Exception:
+            in_class = False
+        if not in_class:
+            smart_G = None  # ignorer : on tombera dans la recherche locale
     if smart_G is not None:
         try:
             smart_inv = compute_invariants(smart_G, required_invariants)

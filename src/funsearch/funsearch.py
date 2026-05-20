@@ -23,8 +23,8 @@ from typing import List, Optional
 
 from ..benchmark.conjecture import Conjecture
 from ..benchmark.load_benchmark import load_benchmark
-from .evaluate import SEED_FUNCTION, compile_heuristic, evaluate_heuristic
-from .llm_client import build_prompt, call_llm, extract_function_code
+from .evaluate import SEED_FUNCTION, BASELINE_FUNCTION, compile_heuristic, evaluate_heuristic
+from .llm_client import build_prompt, build_crossover_prompt, call_llm, extract_function_code
 
 
 class FunSearch:
@@ -84,16 +84,22 @@ class FunSearch:
             self._eval_conjectures = hard_conjectures
         print(f"   IDs : {[c.id for c in self._eval_conjectures]}")
 
-        # --- Étape 2 : évaluer la fonction de base (seed) ---
-        print("\n📌 Itération 0 : fonction de base (violation seule)")
-        seed_result = self._evaluate_and_register(SEED_FUNCTION, label="seed")
+        # --- Étape 2 : évaluer les 2 seeds (violation pure + baseline TP) ---
+        # On démarre avec une POPULATION INITIALE de 2 fonctions, pas 1.
+        # Cela donne au LLM 2 références pour ses variantes au lieu d'une seule.
+        print("\n📌 Génération 0 — Seeds initiaux")
+        seed_result = self._evaluate_and_register(SEED_FUNCTION, label="G0-seed-pure")
         if seed_result is None:
             print("  ❌ Erreur sur la fonction de base. Abandon.")
             return
+        baseline_result = self._evaluate_and_register(BASELINE_FUNCTION, label="G0-baseline-TP")
+        if baseline_result is None:
+            print("  ⚠️  Baseline TP non évaluée (continue avec seed pure).")
 
         # Si déjà 100% résolues → inutile d'appeler le LLM
-        if seed_result["found"] == len(hard_conjectures):
-            print("  ✅ 100% résolues avec la fonction de base. FunSearch inutile.")
+        best_initial = self.population[0]
+        if best_initial["found"] == len(hard_conjectures):
+            print("  ✅ 100% résolues par un seed. FunSearch convergé d'emblée.")
             self._save_best()
             return
 
@@ -103,57 +109,52 @@ class FunSearch:
         seen_codes = {SEED_FUNCTION}  # évite de réévaluer la même fonction
 
         for iteration in range(1, self.n_iterations + 1):
-            print(f"\n🔄 Itération {iteration}/{self.n_iterations}")
+            print(f"\n🔄 Génération {iteration}/{self.n_iterations}")
 
             # Early stopping si stagnation
             if no_improve_count >= MAX_NO_IMPROVE:
-                print(f"  ⏹  Arrêt anticipé : {no_improve_count} itérations sans amélioration.")
+                print(f"  ⏹  Arrêt anticipé : {no_improve_count} générations sans amélioration.")
                 break
 
-            # 1. Demander au LLM une nouvelle fonction (avec retry sur erreur)
-            new_code = None
-            for _attempt in range(2):  # max 2 tentatives
-                candidate = self._ask_llm()
-                if candidate is None:
-                    break
-                if candidate in seen_codes:
-                    print("  ⚠️  Fonction identique à une déjà testée, retry...")
-                    continue
-                # Vérifier la syntaxe avant d'évaluer
-                from .evaluate import compile_heuristic
-                if compile_heuristic(candidate) is not None:
-                    new_code = candidate
-                    break
-                print(f"  ⚠️  Syntaxe invalide, retry ({_attempt+1}/2)...")
-
-            if new_code is None:
-                print("  ⚠️  LLM n'a pas pu générer de fonction valide.")
-                no_improve_count += 1
-                continue
-
-            seen_codes.add(new_code)
-
-            print(f"  💡 Nouvelle fonction générée ({len(new_code)} chars)")
-
-            # 2. Évaluer
             best_before = self.population[0]["found"] if self.population else 0
-            result = self._evaluate_and_register(new_code, label=f"iter{iteration}")
-            if result is None:
-                print("  ⚠️  Fonction invalide.")
-                no_improve_count += 1
-                continue
+            score_before = self.population[0]["score"] if self.population else float("inf")
+            improved_this_gen = False
 
-            # 3. Détecter l'amélioration
-            if result["found"] > best_before:
-                print(f"  🎉 Amélioration ! {best_before} → {result['found']} conjectures résolues")
+            # === Opérateur 1 : MUTATION (LLM voit les meilleures et propose une variante) ===
+            mutation_code = self._propose_with_retry(seen_codes, mode="mutation")
+            if mutation_code is not None:
+                seen_codes.add(mutation_code)
+                print(f"  💡 [mutation] fonction proposée ({len(mutation_code)} chars)")
+                r = self._evaluate_and_register(mutation_code, label=f"G{iteration}-mut")
+                if r is not None and (r["found"] > best_before or
+                                       (r["found"] == best_before and r["score"] < score_before)):
+                    improved_this_gen = True
+
+            # === Opérateur 2 : CROSSOVER (combine les 2 meilleures fonctions) ===
+            if len(self.population) >= 2:
+                crossover_code = self._propose_with_retry(seen_codes, mode="crossover")
+                if crossover_code is not None:
+                    seen_codes.add(crossover_code)
+                    print(f"  🧬 [crossover] fonction proposée ({len(crossover_code)} chars)")
+                    r = self._evaluate_and_register(crossover_code, label=f"G{iteration}-cross")
+                    best_after = self.population[0]["found"]
+                    score_after = self.population[0]["score"]
+                    if r is not None and (best_after > best_before or
+                                           (best_after == best_before and score_after < score_before)):
+                        improved_this_gen = True
+
+            # Bilan génération
+            if improved_this_gen:
+                new_best = self.population[0]
+                print(f"  🎉 GÉNÉRATION {iteration} : amélioration → {new_best['found']} réfutées, coût={new_best['score']:.1f}")
                 no_improve_count = 0
             else:
                 no_improve_count += 1
-                print(f"  ~ Pas d'amélioration ({no_improve_count}/{MAX_NO_IMPROVE})")
+                print(f"  ~ Génération {iteration} : pas d'amélioration ({no_improve_count}/{MAX_NO_IMPROVE})")
 
-            # 4. Si 100% résolues, inutile de continuer
-            if result["found"] == len(hard_conjectures):
-                print("  ✅ 100% des conjectures difficiles résolues !")
+            # 100% résolues → fin
+            if self.population[0]["found"] == len(self._eval_conjectures):
+                print("  ✅ 100% des conjectures-test résolues !")
                 break
 
         # --- Résultat final ---
@@ -219,18 +220,27 @@ class FunSearch:
                 hard.append(c)
         return hard
 
-    def _ask_llm(self) -> Optional[str]:
-        """Demande au LLM de générer une nouvelle fonction de score."""
-        # Construire le contexte : les 3 meilleures fonctions actuelles
+    def _ask_llm(self, mode: str = "mutation") -> Optional[str]:
+        """Demande au LLM de générer une nouvelle fonction de score.
+        mode='mutation' : variante des meilleures fonctions
+        mode='crossover' : enfant qui combine les 2 meilleures (parents)
+        """
         conj_descriptions = [
             f"#{c.id}: {c.y_name} {c.sign} f({c.x_name}) sur {c.subgroups}"
-            for c in self.conjectures[:8]
+            for c in self._eval_conjectures[:8]
         ]
 
-        prompt = build_prompt(
-            best_functions=self.population[:3],
-            conjecture_descriptions=conj_descriptions,
-        )
+        if mode == "crossover" and len(self.population) >= 2:
+            prompt = build_crossover_prompt(
+                parent_a=self.population[0],
+                parent_b=self.population[1],
+                conjecture_descriptions=conj_descriptions,
+            )
+        else:
+            prompt = build_prompt(
+                best_functions=self.population[:3],
+                conjecture_descriptions=conj_descriptions,
+            )
 
         raw = call_llm(prompt, api_key=self.api_key)
         if raw is None:
@@ -243,26 +253,59 @@ class FunSearch:
                 print(f"  Output LLM brut:\n{raw[:300]}")
         return code
 
+    def _propose_with_retry(self, seen_codes: set, mode: str = "mutation") -> Optional[str]:
+        """Demande au LLM avec retry sur duplicats / syntaxe invalide."""
+        for _attempt in range(2):
+            candidate = self._ask_llm(mode=mode)
+            if candidate is None:
+                return None
+            if candidate in seen_codes:
+                continue
+            if compile_heuristic(candidate) is not None:
+                return candidate
+        return None
+
     def _print_summary(self):
-        """Affiche le classement final des fonctions."""
-        print(f"\n{'='*60}")
-        print("CLASSEMENT FINAL — FunSearch (Phase 2)")
-        print(f"{'='*60}")
+        """Affiche la timeline d'évolution + classement final des fonctions."""
         n_eval = len(self._eval_conjectures)
+        print(f"\n{'='*65}")
+        print(f"📈 TIMELINE D'ÉVOLUTION FUNSEARCH — {n_eval} conjectures-test")
+        print(f"{'='*65}")
+        # Recalculer la trace dans l'ordre d'insertion (pas trié par score)
+        # NB: self.population est trié par perf, donc on garde un journal séparé
+        # Ici on affiche tous les essais avec leur label de génération
+        history_by_label = sorted(self.population, key=lambda e: e["label"])
+        running_best = -1
+        running_best_score = float("inf")
+        for entry in history_by_label:
+            improved = ""
+            if entry["found"] > running_best or (entry["found"] == running_best and entry["score"] < running_best_score):
+                running_best = entry["found"]
+                running_best_score = entry["score"]
+                improved = "  ⬆️ NEW BEST"
+            print(
+                f"  [{entry['label']:18s}] réfutées={entry['found']:>2}/{n_eval} | "
+                f"coût={entry['score']:>7.1f} | t_moy={entry.get('avg_time', 0):.3f}s{improved}"
+            )
+
+        print(f"\n{'='*65}")
+        print("🏆 CLASSEMENT FINAL (top 5)")
+        print(f"{'='*65}")
         for i, entry in enumerate(self.population[:5], 1):
             avg = entry.get("avg_time", 0.0)
             print(
-                f"  #{i} [{entry['label']:12s}] "
+                f"  #{i} [{entry['label']:18s}] "
                 f"réfutées={entry['found']}/{n_eval} | "
-                f"score_total={entry['score']:.3f} | "
-                f"temps_moyen={avg:.3f}s"
+                f"coût={entry['score']:.3f} | t_moy={avg:.3f}s"
             )
         if self.population:
             best = self.population[0]
-            print(f"\n  Meilleure fonction : [{best['label']}]")
-            print(f"  Score total (officiel) : {best['score']:.3f}")
-            print(f"  Conjectures réfutées   : {best['found']}/{n_eval}")
-            print(f"  Temps moyen (trouvées) : {best.get('avg_time', 0.0):.3f}s")
+            print(f"\n  ★ Meilleure fonction retenue : [{best['label']}]")
+            print(f"  ★ Score total                : {best['score']:.3f}")
+            print(f"  ★ Conjectures réfutées       : {best['found']}/{n_eval}")
+            print(f"  ★ Temps moyen (trouvées)     : {best.get('avg_time', 0.0):.3f}s")
+            print(f"\n  → Sauvegardée dans : {self.output_dir}/best_heuristic.py")
+            print(f"  → Utilisable avec : python -m src.main --all --time 10 --heuristic")
 
     def _save_best(self):
         """Sauvegarde la meilleure fonction et les résultats."""
